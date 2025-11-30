@@ -14,7 +14,7 @@ def solenoid(power,ground,opened,delay):
     time.sleep(delay)
     print('pneumatics done')
 
-# solenoid(18,23,True)
-# solenoid(18,23,False)
+# solenoid(18,23,True,1)
+# solenoid(18,23,False,1)
 
 # GPIO.cleanup()

@@ -33,8 +33,6 @@ class Detector:
 
         self.colorList = np.random.uniform(low=0, high=255, size=(len(self.classesList), 3))
 
-        #print(self.classesList)
-
     def onVideo(self):
 
         image = cam.capture_array()
@@ -48,7 +46,7 @@ class Detector:
             confidences = list(np.array(confidences).reshape(1,-1)[0])
             confidences = list(map(float,confidences))
 
-            bboxIdx = cv2.dnn.NMSBoxes(bboxs, confidences, score_threshold=0.5, nms_threshold=0.2)
+            bboxIdx = cv2.dnn.NMSBoxes(bboxs, confidences, score_threshold=0.4, nms_threshold=0.2)
 
             if len(bboxIdx) !=0:
                 for i in range(0,len(bboxIdx)):
@@ -56,17 +54,11 @@ class Detector:
                     bbox = bboxs[np.squeeze(bboxIdx[i])]
                     classConfidence = confidences[np.squeeze(bboxIdx[i])]
                     classLabelID = np.squeeze(classLabelIDs[np.squeeze(bboxIdx[i])])
-                    classLabel = self.classesList[classLabelID]
-                    classColor = [int(c) for c in self.colorList[classLabelID]]
-
-                    displayText = "{}:{:.2f}".format(classLabel,classConfidence)
-
-                    x,y,w,h = bbox
-
-                    cv2.rectangle(image, (x,y), (x+w, y+h), color = classColor, thickness=1)
-                    cv2.putText(image, displayText, (x,y-10), cv2.FONT_HERSHEY_PLAIN, 1, classColor,2)
-
-            cv2.imshow("result", image)
+                    if classLabelID == 1:
+                        x,y,w,h = bbox
+                        centerX = (x+x+w)/2
+                        centerY = (y+y+h)/2
+                        print('person', x, y, w, h)
 
             key = cv2.waitKey(1) & 0xFF
             if key == ord('q'):

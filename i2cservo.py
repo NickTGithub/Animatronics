@@ -9,6 +9,6 @@ def miuzei_servo(device,angle,delay):
     time.sleep(delay)
     print('miuzei done')
 
-for i in range(0,10):
-    miuzei_servo(0,45,0.5)
-    miuzei_servo(0,110,0.5)
+# for i in range(0,10):
+#     miuzei_servo(0,45,0.5)
+#     miuzei_servo(0,110,0.5)
