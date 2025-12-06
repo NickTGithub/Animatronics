@@ -16,10 +16,9 @@ def set_angle(angle):
     pwm.ChangeDutyCycle(duty)
     time.sleep(2) 
 
-set_angle(0)
-
-
-set_angle(170)
-
+for dc in range(0,181,5):
+    set_angle(dc)
+for dc in range(181,-1,-5):
+    set_angle(dc)
 pwm.stop()
 GPIO.cleanup()
