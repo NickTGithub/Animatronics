@@ -13,8 +13,3 @@ def solenoid(power,ground,opened,delay):
         GPIO.output(power,False)
     time.sleep(delay)
     print('pneumatics done')
-
-# solenoid(18,23,True,1)
-# solenoid(18,23,False,1)
-
-# GPIO.cleanup()

@@ -17,6 +17,8 @@ def miuzei_micro(device,angle,delay):
     time.sleep(delay)
     print('miuzei micro done')
 
-for i in range(0,10):
-    miuzei_micro(0,0,0.5)
-    miuzei_micro(0,180,0.5)
+
+
+
+
+
