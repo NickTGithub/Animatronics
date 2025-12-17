@@ -5,8 +5,7 @@ import os
 from picamera2 import Picamera2, Preview
 
 cam = Picamera2()
-cam.configure(cam.create_preview_configuration(lores={"size": (120, 90)}, display="lores")
-)
+cam.configure(cam.create_preview_configuration(lores={"size": (120, 90)}, display="lores"))
 cam.start()
 
 np.random.seed(20)
@@ -40,7 +39,7 @@ class Detector:
         image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
 
         while True:
-            classLabelIDs, confidences, bboxs = self.net.detect(image, confThreshold = 0.5)
+            classLabelIDs, confidences, bboxs = self.net.detect(image, confThreshold = 0.67)
 
             bboxs = list(bboxs)
             confidences = list(np.array(confidences).reshape(1,-1)[0])
@@ -58,8 +57,12 @@ class Detector:
                         x,y,w,h = bbox
                         centerX = (x+x+w)/2
                         centerY = (y+y+h)/2
+                        cv2.rectangle(image, (x,y), (x+w, y+h), color = (255,0,255), thickness=1)
+                        cv2.circle(image, (int(centerX), int(centerY)), 10, color = (255,0,255), thickness = 1)
                         print('person', x, y, w, h)
-
+            image = cv2.rotate(image, cv2.ROTATE_90_CLOCKWISE)
+            image = cv2.rotate(image, cv2.ROTATE_90_CLOCKWISE)
+            cv2.imshow('image',image)
             key = cv2.waitKey(1) & 0xFF
             if key == ord('q'):
                 break
