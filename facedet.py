@@ -3,6 +3,8 @@ import numpy as np
 import time
 import os
 from picamera2 import Picamera2, Preview
+from i2cservo import miuzei_servo, miuzei_micro
+import threading
 
 cam = Picamera2()
 cam.configure(cam.create_preview_configuration(lores={"size": (640, 480)}, display="lores"))
@@ -14,6 +16,30 @@ detector = cv2.FaceDetectorYN.create(model,"",(640, 480),score_threshold=0.73,nm
 image = cam.capture_array()
 image = image[:, :, :3] 
 image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+
+tilt_deg = 25
+rot_deg = 105
+centerY = 320
+centerX = 240
+change = True
+
+def neck_tilt():
+    global tilt_deg, centerY
+    while True:
+        tilt_deg == ((centerY*34)/480)+8
+        miuzei_micro(1,tilt_deg,0.3)
+
+def neck_rot():
+    global rot_deg, centerX
+    while True:
+        rot_deg = ((centerX*165)/640)+15
+        miuzei_micro(2,rot_deg,0.3)
+
+neck = threading.Thread(target=neck_tilt)
+neck2 = threading.Thread(target=neck_rot)
+
+neck.start()
+neck2.start()
 
 while True:
     faces = detector.detect(image)
@@ -28,10 +54,11 @@ while True:
     image = cv2.rotate(image, cv2.ROTATE_90_CLOCKWISE)
     image = cv2.rotate(image, cv2.ROTATE_90_CLOCKWISE)
     cv2.imshow('image',image)
+
     key = cv2.waitKey(1) & 0xFF
     if key == ord('q'):
         break
-
+    
     image = cam.capture_array() 
     image = image[:, :, :3]
     image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
