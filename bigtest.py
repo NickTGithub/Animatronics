@@ -6,8 +6,6 @@ import time
 from speaker import set_volume, play_track, stop
 from facedet import facedet
 from ledtest import leds
-import board
-import neopixel
 
 def neck_tilt_thrd():
     print('neck tilt')
