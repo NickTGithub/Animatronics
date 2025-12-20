@@ -26,18 +26,4 @@ def play_track(num):
 def stop():
     dfplayer_send(0x16)
 
-print("Init")
-time.sleep(2)
 
-set_volume(10)   
-play_track(1)     
-time.sleep(5)
-
-set_volume(20)
-play_track(2)     
-time.sleep(5)
-
-set_volume(30)
-play_track(3)   
-time.sleep(5)
-stop()
