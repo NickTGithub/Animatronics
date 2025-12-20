@@ -22,7 +22,7 @@ def washington_arm():
 
 def neck_rot():
     for i in range(0,7):
-        miuzei_micro(2,15,0.5)
+        miuzei_micro(2,30,0.5)
         miuzei_micro(2,180,0.5)
         miuzei_micro(2,105,0.5)
 
