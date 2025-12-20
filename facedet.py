@@ -19,7 +19,6 @@ image = image[:, :, :3]
 image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
 
 #---CONSTANTS---
-#all irl is in inches murica cawww (gun sound)
 yoff_tilt = 3
 xoff_tilt = 3.5
 tilt_theta = math.radians(33.5)
