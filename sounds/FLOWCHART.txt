@@ -1,0 +1,16 @@
+random
+
+<viewer appears>
+
+greeting
+intro
+whatdoing
+expo
+twr
+boston
+war
+lockin
+
+<if at any point the viewer says no>
+
+goodbye
