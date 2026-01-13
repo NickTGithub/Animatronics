@@ -9,24 +9,24 @@ from ledtest import leds
 
 def neck_tilt_thrd():
     print('neck tilt')
-    for i in range(0,12):
-        miuzei_micro(1,8,0.3)
-        miuzei_micro(1,42,0.3)
-        miuzei_micro(1,25,0.3)
+    for i in range(0,10):
+        miuzei_micro(1,0,0.5)
+        miuzei_micro(1,50,0.5)
+        miuzei_micro(1,25,0.5)
 
 def washington_arm_thrd():
     print('washington arm')
-    for i in range(0,5):
-        miuzei_micro(0,0,0.7)
-        miuzei_micro(0,180,0.7)
-        miuzei_micro(0,90,0.7)
+    for i in range(0,10):
+        miuzei_micro(2,0,0.5)
+        miuzei_micro(2,180,0.5)
+        miuzei_micro(2,80,0.5)
 
 def neck_rot_thrd():
     print('neck rot')
-    for i in range(0,7):
-        miuzei_micro(2,30,0.5)
-        miuzei_micro(2,180,0.5)
-        miuzei_micro(2,105,0.5)
+    for i in range(0,10):
+        miuzei_micro(0,15,0.5)
+        miuzei_micro(0,180,0.5)
+        miuzei_micro(0,85,0.5)
 
 def pneumatics_thrd():
     print('pneumatics')
@@ -36,9 +36,9 @@ def pneumatics_thrd():
 def speaker_thrd():
     print('speaker')
     time.sleep(3)
-    set_volume(10)
-    play_track(4)
-    time.sleep(10)
+    set_volume(25)
+    play_track(5)
+    time.sleep(15)
     stop()
 
 def camera_thrd():
@@ -57,6 +57,6 @@ speaker = threading.Thread(target=speaker_thrd)
 camera = threading.Thread(target=camera_thrd)
 lights = threading.Thread(target=lights_thrd)
 
-lights.start()
+speaker.start()
 
 GPIO.cleanup()

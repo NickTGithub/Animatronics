@@ -1,25 +1,10 @@
-import RPi.GPIO as GPIO
+import gpiozero
 import time
 
-GPIO.setmode(GPIO.BCM)
-GPIO.setwarnings(False)
-
-GPIO.setup(18, GPIO.OUT)
-
-pwm = GPIO.PWM(18, 333)
-pwm.start(0) 
-
-def set_angle(angle):
-    print(angle)
-    duty = ((angle / 45) * 16.667) + 16.667
-    print(duty)
-    pwm.ChangeDutyCycle(duty)
-    time.sleep(2) 
-
-set_angle(0)
+servo_pin = 18
 
 
-set_angle(170)
+servo = gpiozero.AngularServo(servo_pin, min_angle=0, max_angle=270, min_pulse_width=0.0005, max_pulse_width=0.0025)
 
-pwm.stop()
-GPIO.cleanup()
+servo.angle = 270
+time.sleep(5)
