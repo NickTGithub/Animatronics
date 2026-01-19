@@ -13,7 +13,7 @@ centerX = 320
 centerY = 180
 change = True
 
-#constants
+# constants
 zoff = 0
 yoff = 0
 tilt_cnst = 0.0016483665
@@ -38,5 +38,5 @@ def neck_rot():
 neck = threading.Thread(target=neck_tilt)
 neck2 = threading.Thread(target=neck_rot)
 
-#neck.start()
+neck.start()
 neck2.start()

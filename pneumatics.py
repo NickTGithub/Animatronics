@@ -14,8 +14,3 @@ def solenoid(power,ground,opened,delay):
     time.sleep(delay)
     print('pneumatics done')
 
-for i in range (0, 80):
-    solenoid(23, 24, True, 0.5)
-    solenoid(16, 20, True, 0.5)
-    solenoid(23, 24, False, 0.5)
-    solenoid(16, 20, False, 0.5)

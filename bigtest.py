@@ -6,6 +6,7 @@ import time
 from speaker import set_volume, play_track, stop
 from facedet import facedet
 from ledtest import leds
+from button import yes_button, no_button
 
 def neck_tilt_thrd():
     print('neck tilt')
@@ -28,18 +29,31 @@ def neck_rot_thrd():
         miuzei_micro(0,180,0.5)
         miuzei_micro(0,85,0.5)
 
-def pneumatics_thrd():
-    print('pneumatics')
-    solenoid(18,23,True,0.5)
-    solenoid(18,23,False,0.5)
+def pneumatics1_thrd():
+    for i in range(0,80):
+        solenoid(23,24,True,0.5)
+        solenoid(23,24,False,0.5)
 
-def speaker_thrd():
-    print('speaker')
+def pneumatics2_thrd():
+    for i in range(0,80):
+        solenoid(16,20,True,0.5)
+        solenoid(16,20,False,0.5)
+
+def speaker_talk_thrd():
+    print('speaker 1')
     time.sleep(3)
-    set_volume(25)
-    play_track(5)
-    time.sleep(15)
-    stop()
+    set_volume(20, 0)
+    play_track(5, 0)
+    time.sleep(10)
+    stop(0)
+
+def speaker_waves_thrd():
+    print('speaker 2')
+    time.sleep(3)
+    set_volume(20, 1)
+    play_track(1, 1)
+    time.sleep(400)
+    stop(1)
 
 def camera_thrd():
     print('camera')
@@ -49,14 +63,32 @@ def lights_thrd():
     print('lights')
     leds()
 
-pneumatics = threading.Thread(target=pneumatics_thrd)
+def button_thrd():
+    yes_counter = 0
+    GPIO.setmode(GPIO.BCM)
+    while True:
+        GPIO.setmode(GPIO.BCM)
+        if yes_button() == True:
+            yes_counter += 1
+            print(yes_counter)
+        if no_button() == True:
+            pass
+
+
+
+
+
+pneumatics1 = threading.Thread(target=pneumatics1_thrd)
+pneumatics2 = threading.Thread(target=pneumatics2_thrd)
 neck_tilt = threading.Thread(target=neck_tilt_thrd)
 washington_arm = threading.Thread(target=washington_arm_thrd)
 neck_rot = threading.Thread(target=neck_rot_thrd)
-speaker = threading.Thread(target=speaker_thrd)
+speaker_talk = threading.Thread(target=speaker_talk_thrd)
+speaker_waves = threading.Thread(target=speaker_waves_thrd)
 camera = threading.Thread(target=camera_thrd)
 lights = threading.Thread(target=lights_thrd)
+button = threading.Thread(target=button_thrd)
 
-speaker.start()
+button.start()
 
 GPIO.cleanup()
