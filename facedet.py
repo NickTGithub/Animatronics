@@ -7,6 +7,8 @@ from i2cservo import miuzei_servo, miuzei_micro
 import threading
 import math
 
+#integrated face detection algorithim and movements
+
 def facedet():
     global kill, rot_deg, tilt_deg
     cam = Picamera2()

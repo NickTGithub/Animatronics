@@ -4,6 +4,8 @@ import time
 import os
 from picamera2 import Picamera2, Preview
 
+#just the detector algorithim
+
 cam = Picamera2()
 cam.configure(cam.create_preview_configuration(lores={"size": (120, 90)}, display="lores"))
 cam.start()

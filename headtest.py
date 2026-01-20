@@ -4,6 +4,8 @@ import math
 import RPi.GPIO as GPIO
 import time
 
+#head movement tests
+
 #tilt range: 8-42, 25 mid, 34 range
 #rot range: 30-180, 104 mid, 150 range
 

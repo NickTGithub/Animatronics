@@ -2,6 +2,8 @@ import RPi.GPIO as GPIO
 import time
 import math
 
+#trying motor speed control using encoders
+
 GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
 

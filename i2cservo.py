@@ -1,6 +1,8 @@
 from adafruit_servokit import ServoKit
 import time
 
+#servos on the i2c board
+
 def miuzei_servo(device,angle,delay):
     miuzei = ServoKit(channels=16)
     miuzei.servo[device].actuation_range = 270

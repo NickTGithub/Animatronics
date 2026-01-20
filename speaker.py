@@ -1,6 +1,8 @@
 import serial
 import time
 
+#sound
+
 seri = serial.Serial(port="/dev/serial0", baudrate=9600, timeout=1)
 seri2 = serial.Serial(port="/dev/ttyUSB0", baudrate=9600, timeout=1)
 

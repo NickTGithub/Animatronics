@@ -1,6 +1,8 @@
 import RPi.GPIO as GPIO
 import time
 
+#pneumatics
+
 def solenoid(power,ground,opened,delay):
     GPIO.setwarnings(False)
     GPIO.setmode(GPIO.BCM)

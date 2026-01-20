@@ -1,6 +1,8 @@
 import time
 import RPi.GPIO as GPIO
 
+#button go click click
+
 def yes_button():
     GPIO.setup(12, GPIO.IN, pull_up_down=GPIO.PUD_UP)
     read = GPIO.input(12)

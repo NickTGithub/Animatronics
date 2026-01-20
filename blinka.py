@@ -2,6 +2,8 @@ import board
 import digitalio
 import busio
 
+#i dont remember lmao
+
 print("Hello, blinka!")
 
 # Try to create a Digital input

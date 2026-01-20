@@ -1,6 +1,8 @@
 import RPi.GPIO as GPIO
 import time
 
+#rocketry servo lmao
+
 GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
 

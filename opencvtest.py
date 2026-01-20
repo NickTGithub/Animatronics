@@ -2,6 +2,8 @@ import cv2
 from picamera2 import Picamera2, Preview
 import time
 
+#testing opencv integration with picamera
+
 cam = Picamera2()
 cam.configure(cam.create_preview_configuration(lores={"size": (160, 120)}, display="lores")
 )

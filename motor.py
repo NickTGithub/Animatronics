@@ -2,6 +2,8 @@ import RPi.GPIO as GPIO
 import time
 from gpiozero import RotaryEncoder
 
+#motors
+
 GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BCM)
 
