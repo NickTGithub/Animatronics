@@ -7,7 +7,7 @@ def miuzei_servo(device,angle,delay):
     miuzei.servo[device].set_pulse_width_range(500, 2900)
     miuzei.servo[device].angle = angle
     time.sleep(delay)
-    print('miuzei done')
+
 
 def miuzei_micro(device,angle,delay):
     miuzei = ServoKit(channels=16)
@@ -15,8 +15,6 @@ def miuzei_micro(device,angle,delay):
     miuzei.servo[device].set_pulse_width_range(400, 2900)
     miuzei.servo[device].angle = angle
     time.sleep(delay)
-    print('miuzei micro done')
-
 
 
 

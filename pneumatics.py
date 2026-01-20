@@ -12,5 +12,5 @@ def solenoid(power,ground,opened,delay):
     elif opened == False:
         GPIO.output(power,False)
     time.sleep(delay)
-    print('pneumatics done')
+
 
