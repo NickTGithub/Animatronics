@@ -4,8 +4,6 @@ import time
 #pneumatics
 
 def solenoid(power,ground,opened,delay):
-    GPIO.setwarnings(False)
-    GPIO.setmode(GPIO.BCM)
     GPIO.setup(power,GPIO.OUT)
     GPIO.setup(ground,GPIO.OUT)
     GPIO.output(ground,False)

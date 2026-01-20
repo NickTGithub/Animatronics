@@ -6,6 +6,9 @@ import time
 seri = serial.Serial(port="/dev/serial0", baudrate=9600, timeout=1)
 seri2 = serial.Serial(port="/dev/ttyUSB0", baudrate=9600, timeout=1)
 
+def play_folder_file(folder, file, port):
+    dfplayer_send(port, 0x0F, folder, file)
+
 def dfplayer_send(port, cmd, param1=0, param2=0):
 
     cmd_line = [0x7E, 0xFF, 0x06, cmd, 0x00, param1, param2]

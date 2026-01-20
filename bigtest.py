@@ -3,16 +3,17 @@ from i2cservo import miuzei_servo, miuzei_micro
 from pneumatics import solenoid
 import threading
 import time
-from speaker import set_volume, play_track, stop
+from speaker import set_volume, play_track, stop, play_folder_file
 from facedet import facedet
 from ledtest import leds
 import random
-from button import yes_button, no_button
+from button import yes_button, no_button, init_button
 
 #integration
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
+init_button()
 
 def timing_thrd():
     global timer
@@ -20,8 +21,6 @@ def timing_thrd():
     while True:
         timer += 0.1
         time.sleep(0.1)
-        if timer >= 300:
-            break
 
 def flag_thrd():
     for i in range(0,30):
@@ -60,16 +59,19 @@ def pneumatics2_thrd():
 def speaker_talk_thrd():
     global yes_counter, talking, no
     talking = False
-    durations = [0,3,4,4,4,18,16,17,21,19,14,25,20,16,23,19,15,27,21,19,26,13,13,4,5,3,7,6,3]
+    durations = [0,3.5,4.5,4.5,4.5,14.5,14.5,12.5,8.5,16.5,17.5,21.5,19.5,14.5,25.5,20.5,
+                 16.5,23.5,19.5,15.5,27.5,21.5,19.5,26.5,13.5,13.5,4.5,5.5,3.5,7.5,6.5,3.5]
     time.sleep(3)
     set_volume(20,0)
+    talking = True
     play_track(1,0)
     time.sleep(3)
+    talking = False
     while True:
         if yes_counter == 1:
             track = random.randint(5,7)
             print(track)
-            play_track(track, 0)
+            play_track(track,0)
             talking = True
             time.sleep(durations[track])
             talking = False
@@ -78,7 +80,7 @@ def speaker_talk_thrd():
         if yes_counter == 3:
             track = random.randint(8,10)
             print(track)
-            play_track(track, 0)
+            play_track(track,0)
             talking = True
             time.sleep(durations[track])
             talking = False
@@ -87,7 +89,7 @@ def speaker_talk_thrd():
         if yes_counter == 5:
             track = random.randint(11,13)
             print(track)
-            play_track(track, 0)
+            play_track(track,0)
             talking = True
             time.sleep(durations[track])
             talking = False
@@ -96,7 +98,7 @@ def speaker_talk_thrd():
         if yes_counter == 7:
             track = random.randint(14,16)
             print(track)
-            play_track(track, 0)
+            play_track(track,0)
             talking = True
             time.sleep(durations[track])
             talking = False
@@ -105,7 +107,7 @@ def speaker_talk_thrd():
         if yes_counter == 9:
             track = random.randint(17,19)
             print(track)
-            play_track(track, 0)
+            play_track(track,0)
             talking = True
             time.sleep(durations[track])
             talking = False
@@ -114,7 +116,7 @@ def speaker_talk_thrd():
         if yes_counter == 11:
             track = random.randint(20,22)
             print(track)
-            play_track(track, 0)
+            play_track(track,0)
             talking = True
             time.sleep(durations[track])
             talking = False
@@ -123,7 +125,7 @@ def speaker_talk_thrd():
         if yes_counter == 13:
             track = random.randint(23,25)
             print(track)
-            play_track(track, 0)
+            play_track(track,0)
             talking = True
             time.sleep(durations[track])
             talking = False
@@ -132,11 +134,13 @@ def speaker_talk_thrd():
         if no == True:
             track = random.randint(26,31)
             print(track)
-            play_track(track, 0)
+            play_track(track,0)
             talking = True
             time.sleep(durations[track])
             talking = False
             stop(0)
+            yes_counter = 0
+        time.sleep(0.01)
     
 
 def speaker_waves_thrd():
@@ -147,6 +151,7 @@ def speaker_waves_thrd():
     while True:
         if (no == True) or (timer >= 30): #change to 400 for real thing, and switch no to another button
             stop(1)
+        time.sleep(0.01)
 
 def camera_thrd():
     print('camera')
@@ -169,6 +174,7 @@ def button_thrd():
             print('no')
         else:
             no = False
+        time.sleep(0.01)
 
 
 
@@ -191,6 +197,7 @@ try:
     timing.start()
     button.start()
     speaker_talk.start()
+    timing.join()
 except KeyboardInterrupt:
     print('end')
 finally:
