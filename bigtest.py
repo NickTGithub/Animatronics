@@ -1,13 +1,23 @@
-import RPi.GPIO as GPIO
 from i2cservo import miuzei_servo, miuzei_micro
 from pneumatics import solenoid
-import threading
-import time
 from speaker import set_volume, play_track, stop
 from facedet import facedet, spawn
 from ledtest import leds
-import random
 from button import yes_button, no_button, init_button
+
+import random
+import threading
+import time
+import RPi.GPIO as GPIO
+from adafruit_servokit import ServoKit
+import cv2
+import numpy as np
+import os
+from picamera2 import Picamera2, Preview
+import math
+import board
+import neopixel
+import serial
 
 #integration
 
