@@ -32,8 +32,8 @@ def facedet():
     image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
 
     #---CONSTANTS---
-    yoff_tilt = 3
-    xoff_tilt = 3.5
+    yoff_tilt = 12
+    xoff_tilt = 7
     tilt_theta = math.radians(33.5)
     head_set = 335
     dist_set = 12
@@ -41,8 +41,8 @@ def facedet():
     d = 4.5
     h3 = 240
 
-    yoff_rot = 0
-    xoff_rot = 3.5
+    yoff_rot = 1.5
+    xoff_rot = 7
     rot_theta = math.radians(51)
     head_set_rot = 200
     dist_set_rot = 12
@@ -61,22 +61,24 @@ def facedet():
     def neck_tilt():
         global tilt_deg, kill
         while True:
-            miuzei_micro(1, tilt_deg, 0.3)
+            miuzei_micro(2, tilt_deg, 0.3)
             if kill == 1:
                 break
+            time.sleep(0.1)
 
     def neck_rot():
         global rot_deg, kill
         while True:
-            miuzei_micro(2, rot_deg, 0.3)
+            miuzei_micro(1, rot_deg, 0.3)
             if kill == 1:
                 break
+            time.sleep(0.1)
 
     neck = threading.Thread(target=neck_tilt)
     neck2 = threading.Thread(target=neck_rot)
 
-    neck.start()
-    neck2.start()
+    # neck.start()
+    # neck2.start()
 
     while True:
         image = cam.capture_array() 
@@ -113,9 +115,11 @@ def facedet():
                 head_rot = w
                 w4 = centerX - 320
 
-                tilt_deg = (math.degrees(math.atan((yoff_tilt+((math.tan(tilt_theta)*(((dist_set*head_set)/head)+((height/math.tan(tilt_theta))-d))*h4)/h3))/(((dist_set*head_set)/head)+((height/math.tan(tilt_theta))-d))+xoff_tilt))*gear_ratio*3.5)-151
-                rot_deg = (math.degrees(math.atan((yoff_rot+((math.tan(rot_theta)*(((dist_set_rot*head_set_rot)/head_rot)+((width/math.tan(rot_theta))-d))*w4)/w3))/(((dist_set_rot*head_set_rot)/head_rot)+((width/math.tan(rot_theta))-d))+xoff_rot))*-3.5)+360
-        # print(tilt_deg, rot_deg)
+                tilt_deg = 32.5 - (h4/12)
+                head_deg = 100 - (h4/4)
+                # tilt_deg = (math.degrees(math.atan((yoff_tilt+((math.tan(tilt_theta)*(((dist_set*head_set)/head)+((height/math.tan(tilt_theta))-d))*h4)/h3))/(((dist_set*head_set)/head)+((height/math.tan(tilt_theta))-d))+xoff_tilt))*gear_ratio)
+                # rot_deg = (math.degrees(math.atan((yoff_rot+((math.tan(rot_theta)*(((dist_set_rot*head_set_rot)/head_rot)+((width/math.tan(rot_theta))-d))*w4)/w3))/(((dist_set_rot*head_set_rot)/head_rot)+((width/math.tan(rot_theta))-d))+xoff_rot)))
+        print(tilt_deg, rot_deg)
         # cv2.imshow('image',image)
 
         key = cv2.waitKey(1) & 0xFF

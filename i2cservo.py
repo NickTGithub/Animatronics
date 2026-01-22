@@ -21,4 +21,3 @@ def miuzei_micro(device,angle,delay):
 
 
 
-
