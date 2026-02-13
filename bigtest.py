@@ -72,23 +72,22 @@ def neck_rot_thrd():
             miuzei_micro(1,115,5)
 
 
-def pneumatics1_thrd():
-    print('1')
-    time.sleep(3)
-    solenoid(27,22,True,1)
-    solenoid(27,22,False,1)
-
 def pneumatics2_thrd():
+    print('1')
+    time.sleep(1)
+    for i in range(0,4):
+        solenoid(27,22,True,1)
+        solenoid(27,22,False,1)
+        
+
+
+def pneumatics1_thrd():
     time.sleep(1)
     print('2')
-    solenoid(13,26,True,1)
-    solenoid(13,26,False,1)
-    solenoid(13,26,True,1)
-    solenoid(13,26,False,1)
-    solenoid(13,26,True,1)
-    solenoid(13,26,False,1)
-    solenoid(13,26,True,1)
-    solenoid(13,26,False,1)
+    for i in range(0,30):
+        solenoid(13,26,True,1)
+        solenoid(13,26,False,1)
+
 
 def speaker_talk_thrd():
     global yes_counter, talking, no
@@ -243,8 +242,9 @@ try:
     # speaker_waves.start()
     # flag.start()
     # camera.start()
-    lights.start()
-    pneumatics2.start()
+    # lights.start()
+    pneumatics1.start()
+    #pneumatics2.start()
     # washington.start()
     # neck_tilt.start()
     # neck_rot.start()
