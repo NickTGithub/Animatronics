@@ -4,6 +4,7 @@ from speaker import set_volume, play_track, stop
 from facedet import facedet, spawn
 from ledtest import leds
 from button import yes_button, no_button, init_button
+from voice import detect, audio_callback
 
 import random
 import threading
