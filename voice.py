@@ -3,8 +3,9 @@ import queue
 import sounddevice as sd
 from vosk import Model, KaldiRecognizer, SetLogLevel
 import json
+from downsample import downsample_audio
 
-SAMPLE_RATE = 16000
+SAMPLE_RATE = 48000
 
 SetLogLevel(-1)
 
@@ -40,13 +41,13 @@ def yn():
 def detect():
     global spoken, newWord, yeslist, nolist, output, running
     #gets raw imput from microphone
-    with sd.RawInputStream(samplerate=SAMPLE_RATE, blocksize=8000, dtype='int16', channels=1, callback=audio_callback):
+    with sd.RawInputStream(device=1,samplerate=SAMPLE_RATE, blocksize=8000, dtype='int16', channels=2, callback=audio_callback):
 
         while True:
             #get next file in queue
 
             data = q.get()
-
+        
             #if model is confident, print result, otherwise print best guess
             if record.AcceptWaveform(data) == True:
                 result = json.loads(record.Result())
