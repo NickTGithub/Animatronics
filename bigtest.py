@@ -4,7 +4,7 @@ from speaker import set_volume, play_track, stop
 from facedet import facedet, spawn
 from ledtest import leds
 from button import yes_button, no_button, init_button
-from voice import detect, audio_callback
+from voice import detect, yn, audio_callback
 
 import random
 import threading
@@ -19,6 +19,11 @@ import math
 import board
 import neopixel
 import serial
+import queue
+import sounddevice as sd
+from vosk import Model, KaldiRecognizer, SetLogLevel
+import json
+
 
 #integration
 
@@ -223,6 +228,13 @@ def button_thrd():
             no = False
         time.sleep(0.01)
 
+def mic_thrd():
+    detect()
+
+def yesno_thrd():
+    while True:
+        yn()
+
 pneumatics1 = threading.Thread(target=pneumatics1_thrd)
 pneumatics2 = threading.Thread(target=pneumatics2_thrd)
 neck_tilt = threading.Thread(target=neck_tilt_thrd)
@@ -235,6 +247,8 @@ lights = threading.Thread(target=lights_thrd)
 button = threading.Thread(target=button_thrd)
 timing = threading.Thread(target=timing_thrd)
 washington = threading.Thread(target=washington_thrd)
+mic = threading.Thread(target=mic_thrd)
+yesno = threading.Thread(target=yesno_thrd)
 
 try:
     timing.start()
@@ -244,11 +258,13 @@ try:
     # flag.start()
     # camera.start()
     # lights.start()
-    pneumatics1.start()
+    #pneumatics1.start()
     #pneumatics2.start()
     # washington.start()
     # neck_tilt.start()
     # neck_rot.start()
+    mic.start()
+    yesno.start()
     timing.join()
 except KeyboardInterrupt:
     print('end')
