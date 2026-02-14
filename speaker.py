@@ -19,9 +19,9 @@ def dfplayer_send(port, cmd, param1=0, param2=0):
     low = checksum & 0xFF
 
     packet = bytes(cmd_line + [high, low, 0xEF])
-    if port == 0:
+    if port == 1:
         seri.write(packet)
-    elif port == 1:
+    elif port == 0:
         seri2.write(packet)
     time.sleep(0.05)
 
@@ -35,3 +35,5 @@ def play_track(num, port):
 def stop(port):
     dfplayer_send(port, 0x16)
 
+stop(0)
+stop(1)

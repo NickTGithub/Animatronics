@@ -4,7 +4,7 @@ from speaker import set_volume, play_track, stop
 from facedet import facedet, spawn
 from ledtest import leds
 from button import yes_button, no_button, init_button
-from voice import detect, yn, audio_callback
+from voice import detect, yn, resetspoken, stfugng, unstfugng
 
 import random
 import threading
@@ -96,8 +96,11 @@ def pneumatics1_thrd():
 
 
 def speaker_talk_thrd():
-    global yes_counter, talking, no
+    global yes_counter, talking, no, yesticked
     talking = False
+    yesticked = False
+    unstfugng()
+    resetspoken()
     durations = [0,3.5,4.5,4.5,4.5,14.5,14.5,12.5,8.5,16.5,17.5,21.5,19.5,14.5,25.5,20.5,
                  16.5,23.5,19.5,15.5,27.5,21.5,19.5,26.5,13.5,13.5,4.5,5.5,3.5,7.5,6.5,3.5]
     time.sleep(3)
@@ -110,8 +113,12 @@ def speaker_talk_thrd():
             print(track)
             play_track(track,0)
             talking = True
+            stfugng()
             time.sleep(durations[track])
             talking = False
+            yesticked = False
+            unstfugng()
+            resetspoken()
             stop(0)
             yes_counter = 0
             new_counter = 1
@@ -120,71 +127,103 @@ def speaker_talk_thrd():
             print(track)
             play_track(track,0)
             talking = True
+            stfugng()
             time.sleep(durations[track])
             talking = False
+            yesticked = False
+            unstfugng()
+            resetspoken()
             stop(0)
-            yes_counter += 1
-        if yes_counter == 3:
+            #yes_counter += 1
+        if yes_counter == 2:
             track = random.randint(8,10)
             print(track)
             play_track(track,0)
             talking = True
+            stfugng()
             time.sleep(durations[track])
             talking = False
+            yesticked = False
+            unstfugng()
+            resetspoken()
             stop(0)
-            yes_counter += 1
-        if yes_counter == 5:
+            #yes_counter += 1
+        if yes_counter == 3:
             track = random.randint(11,13)
             print(track)
             play_track(track,0)
             talking = True
+            stfugng()
             time.sleep(durations[track])
             talking = False
+            yesticked = False
+            unstfugng()
+            resetspoken()
             stop(0)
-            yes_counter += 1
-        if yes_counter == 7:
+            #yes_counter += 1
+        if yes_counter == 4:
             track = random.randint(14,16)
             print(track)
             play_track(track,0)
             talking = True
+            stfugng()
             time.sleep(durations[track])
             talking = False
+            yesticked = False
+            unstfugng()
+            resetspoken()
             stop(0)
-            yes_counter += 1
-        if yes_counter == 9:
+            #yes_counter += 1
+        if yes_counter == 5:
             track = random.randint(17,19)
             print(track)
             play_track(track,0)
             talking = True
+            stfugng()
             time.sleep(durations[track])
             talking = False
+            yesticked = False
+            unstfugng()
+            resetspoken()
             stop(0)
-            yes_counter += 1
-        if yes_counter == 11:
+            #yes_counter += 1
+        if yes_counter == 6:
             track = random.randint(20,22)
             print(track)
             play_track(track,0)
             talking = True
+            stfugng()
             time.sleep(durations[track])
             talking = False
+            yesticked = False
+            unstfugng()
+            resetspoken()
             stop(0)
-            yes_counter += 1
-        if yes_counter == 13:
+            #yes_counter += 1
+        if yes_counter == 7:
             track = random.randint(23,25)
             print(track)
             play_track(track,0)
             talking = True
+            stfugng()
             time.sleep(durations[track])
             talking = False
+            yesticked = False
+            unstfugng()
+            resetspoken()
             stop(0)
-            yes_counter += 1
+            #yes_counter += 1
         if (no == True) and (talking == False):
             track = random.randint(26,31)
             print(track)
             play_track(track,0)
             talking = True
+            stfugng()
             time.sleep(durations[track])
             talking = False
+            yesticked = False
+            unstfugng()
+            resetspoken()
             stop(0)
             yes_counter = 0
             time.sleep(5)
@@ -214,12 +253,13 @@ def lights_thrd():
     # leds(0,0,0,1,117,1)
 
 def button_thrd():
-    global yes_counter, no, talking
+    global yes_counter, no, talking, yesticked
     no = False
     yes_counter = 0
     while True:
-        if (yes_button() == True) and (talking == False):
+        if (yes_button() == True) and (talking == False) and (yesticked == False):
             yes_counter += 1
+            yesticked = True
             print(yes_counter)
         if no_button() == True:
             no = True
@@ -232,8 +272,18 @@ def mic_thrd():
     detect()
 
 def yesno_thrd():
+    global yes_counter, no, talking, yesticked
     while True:
-        yn()
+        if yn() == 'none':
+            no = False
+        elif yn() == 'yes' and talking == False and yesticked == False:
+            yes_counter += 1
+            yesticked = True
+            print('yescounter=', yes_counter)
+        elif yn() == 'no':
+            no = True
+            #print('nooo')
+
 
 pneumatics1 = threading.Thread(target=pneumatics1_thrd)
 pneumatics2 = threading.Thread(target=pneumatics2_thrd)
@@ -252,14 +302,14 @@ yesno = threading.Thread(target=yesno_thrd)
 
 try:
     timing.start()
-    # button.start()
-    # speaker_talk.start()
+    button.start()
+    speaker_talk.start()
     # speaker_waves.start()
     # flag.start()
-    # camera.start()
+    camera.start()
     # lights.start()
-    #pneumatics1.start()
-    #pneumatics2.start()
+    # pneumatics1.start()
+    # pneumatics2.start()
     # washington.start()
     # neck_tilt.start()
     # neck_rot.start()

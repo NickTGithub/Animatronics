@@ -55,8 +55,8 @@ def facedet():
 
     tilt_deg = 25
     rot_deg = 105
-    miuzei_micro(1,25,0.5)
-    miuzei_micro(2,105,0.5)
+    # miuzei_micro(1,25,0.5)
+    # miuzei_micro(2,105,0.5)
 
     def neck_tilt():
         global tilt_deg, kill
@@ -119,7 +119,7 @@ def facedet():
                 head_deg = 100 - (h4/4)
                 # tilt_deg = (math.degrees(math.atan((yoff_tilt+((math.tan(tilt_theta)*(((dist_set*head_set)/head)+((height/math.tan(tilt_theta))-d))*h4)/h3))/(((dist_set*head_set)/head)+((height/math.tan(tilt_theta))-d))+xoff_tilt))*gear_ratio)
                 # rot_deg = (math.degrees(math.atan((yoff_rot+((math.tan(rot_theta)*(((dist_set_rot*head_set_rot)/head_rot)+((width/math.tan(rot_theta))-d))*w4)/w3))/(((dist_set_rot*head_set_rot)/head_rot)+((width/math.tan(rot_theta))-d))+xoff_rot)))
-        print(tilt_deg, rot_deg)
+        #print(tilt_deg, rot_deg)
         # cv2.imshow('image',image)
 
         key = cv2.waitKey(1) & 0xFF
@@ -136,6 +136,7 @@ def facedet():
 def spawn():
     global newPeople
     if newPeople == True:
+        #print('found person')
         return True
     else:
         return False
