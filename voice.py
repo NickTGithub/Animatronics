@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3 
 import queue
 import sounddevice as sd
 from vosk import Model, KaldiRecognizer, SetLogLevel
