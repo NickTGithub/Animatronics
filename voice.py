@@ -14,45 +14,59 @@ record = KaldiRecognizer(model, 16000)
 record.SetWords(True)
 
 spoken = ''
-newWord = False
 
 #a, b, c just placeholders that do nothing bc we dont need to use them
 #throws sound files in queue to be used
 def audio_callback(indata, a, b, c):
-    downData = indata[::3, :]
-    q.put(bytes(downData))
+    global stfu, spoken
+    if stfu == False:
+        downData = indata[::3, :]
+        q.put(bytes(downData))
+    else:
+        spoken = None
 
-yeslist = ['yes','yeah','maybe','yay','ok','okay']
+yeslist = ['yes','yeah','maybe','yay','ok','okay','yesh']
 nolist = ['no']
 output = 'maybe'
-running = False
 tryYN = False
 
 def yn():
-    global spoken, yeslist, nolist, output, running, tryYN
-    found = False
-    if tryYN == True:
-        for i in yeslist:
-            if i in spoken and found  == False:
-                output = 'yes heard'
-                print(output)
-                found = True
-        for i in nolist:
-            if i in spoken and found  == False:
-                output = 'no heard'
-                print(output)
-                found = True
-    if output == 'yes heard':
-        result = 'yes'
-    elif output == 'no heard':
-        result = 'no'
-    else:
+    global spoken, yeslist, nolist, output, stfu, result, tryYN
+    output = None
+    if stfu == True:
+        spoken = None
+        output = None
         result = 'none'
+    else:
+        found = False
+        if spoken != None and tryYN == True:
+            #print('spoken',spoken)
+            for i in yeslist:
+                if i in spoken and found == False:
+                    output = 'yes heard'
+                    print('output',output)
+                    found = True
+                    print('yes found in', spoken)
+            for i in nolist:
+                if i in spoken and found == False:
+                    output = 'no heard'
+                    print('output',output)
+                    found = True
+                    print('no found in', spoken)
+        if output == 'yes heard':
+            result = 'yes'
+            print('yes found in', spoken)
+        elif output == 'no heard':
+            result = 'no'
+        else:
+            result = 'none'
+    output = None
     return result
 
 def resetspoken():
-    global spoken
-    spoken = 'fjiaeorgioe'
+    global spoken, output
+    spoken = None
+    output = None
 
 stfu = False
 
@@ -65,38 +79,30 @@ def unstfugng():
     stfu = False
 
 def detect():
-    global spoken, newWord, yeslist, nolist, output, running, tryYN
+    global spoken, yeslist, nolist, output, tryYN
     #gets raw imput from microphone
     with sd.InputStream(device=1,samplerate=48000, blocksize=8000, dtype='int16', channels=1, callback=audio_callback):
         print('go')
         while True:
         
             #get next file in queue
-            tryYN = False
-            spoken = 'yf'
             data = q.get()
+
+            tryYN = False
 
             #if model is confident, print result, otherwise print best guess
             if record.AcceptWaveform(data) == True:
-                tryYN = True
                 result = json.loads(record.Result())
-                #print(result.get('text'))
-                if stfu == True:
-                    spoken = 'gheauigh'
-                else:
-                    spoken = result.get('text')
-                print(spoken)
-                
+                spoken = result.get('text')
+                print('spoken',spoken)
+                tryYN = True
             else:
                 partial = json.loads(record.PartialResult())
-                #print(partial.get('partial', ''), end='\r')
-                
-                if stfu == True:
-                    spoken = 'gheauigh'
-                else:
-                    spoken = partial.get('partial', '')
+                spoken = partial.get('partial', '')
                 print(spoken, end='\r')
-            
+
+            if stfu == True:
+                spoken = None
                 
             
                 

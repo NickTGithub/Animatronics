@@ -32,7 +32,7 @@ GPIO.setwarnings(False)
 init_button()
 talking = False
 def timing_thrd():
-    global timer
+    global timer,ynthing
     timer = 0
     while True:
         timer += 0.1
@@ -94,140 +94,58 @@ def pneumatics1_thrd():
         solenoid(13,26,True,1)
         solenoid(13,26,False,1)
 
+def talk():
+    global track, talking, answered, durations
+    print(track)
+    play_track(track,0)
+    talking = True
+    stfugng()
+    time.sleep(durations[track])
+    stop(0)
+    talking = False
+    answered = False
 
 def speaker_talk_thrd():
-    global yes_counter, talking, no, yesticked
+    global yes_counter, talking, no, answered, ynthing, durations, track
     talking = False
-    yesticked = False
+    answered = False
     unstfugng()
     resetspoken()
-    durations = [0,3.5,4.5,4.5,4.5,14.5,14.5,12.5,8.5,16.5,17.5,21.5,19.5,14.5,25.5,20.5,
+    durations = [0,3.5,4.5,4.5,4.5,14.5,14.5,13,8.5,16.5,17.5,21.5,19.5,14.5,25.5,20.5,
                  16.5,23.5,19.5,15.5,27.5,21.5,19.5,26.5,13.5,13.5,4.5,5.5,3.5,7.5,6.5,3.5]
     time.sleep(3)
     set_volume(100,0)
     new_counter = 0
+    randStart = [5,8,11,14,17,20,23]
+    randEnd = [7,10,13,16,19,22,25]
     while True:
         if (spawn() == True) and (talking == False) and (new_counter == 0):
             print('enter')
             track = random.randint(2,4)
-            print(track)
-            play_track(track,0)
-            talking = True
-            stfugng()
-            time.sleep(durations[track])
-            talking = False
-            yesticked = False
+            talk()
             unstfugng()
             resetspoken()
-            stop(0)
             yes_counter = 0
             new_counter = 1
-        if yes_counter == 1:
-            track = random.randint(5,7)
-            print(track)
-            play_track(track,0)
-            talking = True
-            stfugng()
-            time.sleep(durations[track])
-            talking = False
-            yesticked = False
-            unstfugng()
-            resetspoken()
-            stop(0)
-            #yes_counter += 1
-        if yes_counter == 2:
-            track = random.randint(8,10)
-            print(track)
-            play_track(track,0)
-            talking = True
-            stfugng()
-            time.sleep(durations[track])
-            talking = False
-            yesticked = False
-            unstfugng()
-            resetspoken()
-            stop(0)
-            #yes_counter += 1
-        if yes_counter == 3:
-            track = random.randint(11,13)
-            print(track)
-            play_track(track,0)
-            talking = True
-            stfugng()
-            time.sleep(durations[track])
-            talking = False
-            yesticked = False
-            unstfugng()
-            resetspoken()
-            stop(0)
-            #yes_counter += 1
-        if yes_counter == 4:
-            track = random.randint(14,16)
-            print(track)
-            play_track(track,0)
-            talking = True
-            stfugng()
-            time.sleep(durations[track])
-            talking = False
-            yesticked = False
-            unstfugng()
-            resetspoken()
-            stop(0)
-            #yes_counter += 1
-        if yes_counter == 5:
-            track = random.randint(17,19)
-            print(track)
-            play_track(track,0)
-            talking = True
-            stfugng()
-            time.sleep(durations[track])
-            talking = False
-            yesticked = False
-            unstfugng()
-            resetspoken()
-            stop(0)
-            #yes_counter += 1
-        if yes_counter == 6:
-            track = random.randint(20,22)
-            print(track)
-            play_track(track,0)
-            talking = True
-            stfugng()
-            time.sleep(durations[track])
-            talking = False
-            yesticked = False
-            unstfugng()
-            resetspoken()
-            stop(0)
-            #yes_counter += 1
-        if yes_counter == 7:
-            track = random.randint(23,25)
-            print(track)
-            play_track(track,0)
-            talking = True
-            stfugng()
-            time.sleep(durations[track])
-            talking = False
-            yesticked = False
-            unstfugng()
-            resetspoken()
-            stop(0)
-            #yes_counter += 1
+        for i in range(0,8):
+            if yes_counter == (i*2)+1:
+                track = random.randint(randStart[i],randEnd[i])
+                talk()
+                unstfugng()
+                resetspoken()
+                yes_counter = (i+1)*2
+                ynthing = None
         if (no == True) and (talking == False):
             track = random.randint(26,31)
-            print(track)
+            print('track',track)
             play_track(track,0)
-            talking = True
-            stfugng()
-            time.sleep(durations[track])
-            talking = False
-            yesticked = False
+            talk()
             unstfugng()
             resetspoken()
-            stop(0)
             yes_counter = 0
             time.sleep(5)
             new_counter = 0
+            no = False
         time.sleep(0.01)
     
 def speaker_waves_thrd():
@@ -253,13 +171,13 @@ def lights_thrd():
     # leds(0,0,0,1,117,1)
 
 def button_thrd():
-    global yes_counter, no, talking, yesticked
+    global yes_counter, no, talking, answered
     no = False
     yes_counter = 0
     while True:
-        if (yes_button() == True) and (talking == False) and (yesticked == False):
+        if (yes_button() == True) and (talking == False) and (answered == False):
             yes_counter += 1
-            yesticked = True
+            answered = True
             print(yes_counter)
         if no_button() == True:
             no = True
@@ -272,17 +190,32 @@ def mic_thrd():
     detect()
 
 def yesno_thrd():
-    global yes_counter, no, talking, yesticked
+    global yes_counter, no, talking, answered, ynthing
     while True:
-        if yn() == 'none':
+        ynthing = None
+        no = False
+        if talking == False and answered == False:
+            ynthing = yn()
+        if ynthing != None and answered == False and talking == False:
+            pass
+        if ynthing == None:
             no = False
-        elif yn() == 'yes' and talking == False and yesticked == False:
+        elif ynthing == 'yes' and answered == False:
             yes_counter += 1
-            yesticked = True
+            answered = True
             print('yescounter=', yes_counter)
-        elif yn() == 'no':
+            print('yn() return',ynthing)
+            resetspoken()
+            stfugng()
+            ynthing = None
+        elif ynthing == 'no':
             no = True
-            #print('nooo')
+            resetspoken()
+            stfugng()
+            print('nooo')
+        time.sleep(0.01)
+
+
 
 
 pneumatics1 = threading.Thread(target=pneumatics1_thrd)
