@@ -1,7 +1,7 @@
 from picamera2 import Picamera2, Preview
 import time
 
-#testing picamera on monitor
+#testing picamera on monitorigiug
 
 picam2 = Picamera2()
 camera_config = picam2.create_preview_configuration()
