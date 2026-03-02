@@ -23,8 +23,14 @@ def facedet():
     image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
 
     #---CONSTANTS---
-
-
+    SIZEP = 220 #pixels
+    SIZER = 7 #inches
+    LENR = 18 #inches
+    PTORSCALE = SIZER/SIZEP
+    PROJX = 0.25 #inches
+    PROJY = 0.75 #inches
+    XOFF = 1
+    YOFF = 0
 
     while True:
         image = cam.capture_array() 
@@ -39,20 +45,42 @@ def facedet():
                 centerX = (x+x+w)/2
                 centerY = (y+y+h)/2
 
-
                 cv2.rectangle(image, (x,y), (x+w, y+h), color = (255,0,255), thickness=1)
                 cv2.circle(image, (int(centerX), int(centerY)), 10, color = (255,0,255), thickness = 1)
 
-                centerY = centerY - 240
+                centerY -= 240
+                centerX -= 320
+                size = h
+                scale = SIZEP/size
+                depth = scale*LENR 
 
-        image = cv2.circle(image, (320,240), 40, (0,0,255), thickness=3)
-        image = cv2.circle(image, (0,0), 40, (0,0,255), thickness=3)
+                realx = PTORSCALE * centerX
+                realy = PTORSCALE * centerY
+
+                newrealx = realx + XOFF
+                newrealy = realy - YOFF
+
+                xz = PROJX + depth
+                yz = PROJY + depth
+
+                xangle = math.atan(newrealx/xz)
+                yangle = math.atan(newrealy/yz)
+
+                xangle = xangle * (180/math.pi)
+                yangle = yangle * (180/math.pi)
+
         cv2.imshow('image',image)
 
         key = cv2.waitKey(1) & 0xFF
         if key == ord('q'):
             kill = 1
             break
+        if key == ord('b'):
+            print('--------------------------')
+            print('size', size,'depth', depth, 'centerX', centerX, 'realx', realx, 'realy', realy)
+            print('xz', xz, 'yz', yz, 'newrealx', newrealx, 'newrealy', newrealy)
+            print('xangle', xangle, 'yangle', yangle)
+            print('--------------------------')
 
     cv2.destroyAllWindows()
 
