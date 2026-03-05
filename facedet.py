@@ -122,7 +122,7 @@ def facedet():
         #print(tilt_deg, rot_deg) redidd this
         image = cv2.circle(image, (320,240), 40, (0,0,255), thickness=3)
         image = cv2.circle(image, (0,0), 40, (0,0,255), thickness=3)
-        cv2.imshow('image',image)
+        #cv2.imshow('image',image)
 
         key = cv2.waitKey(1) & 0xFF
         if key == ord('q'):

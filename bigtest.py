@@ -63,11 +63,14 @@ def washington_thrd():
 
 def neck_tilt_thrd():
     while True:
-        if talking==True:
-            miuzei_micro(2,25,0.5)
-        else:
-            miuzei_micro(2,0,5)
-            miuzei_micro(2,50,5)
+        # if talking==True:
+        #     miuzei_micro(2,25,0.5)
+        # else:
+        #     miuzei_micro(2,0,5)
+        #     miuzei_micro(2,50,5)
+        miuzei_micro(2,25,2)
+        miuzei_micro(2,50,2)
+        miuzei_micro(2,0,2)
 
 def neck_rot_thrd():
     while True:
@@ -85,8 +88,6 @@ def pneumatics2_thrd():
         solenoid(27,22,True,1)
         solenoid(27,22,False,1)
         
-
-
 def pneumatics1_thrd():
     time.sleep(1)
     print('2')
@@ -235,19 +236,19 @@ yesno = threading.Thread(target=yesno_thrd)
 
 try:
     timing.start()
-    button.start()
-    speaker_talk.start()
+    # button.start()
+    # speaker_talk.start()
     # speaker_waves.start()
     # flag.start()
-    camera.start()
+    # camera.start()
     # lights.start()
     # pneumatics1.start()
     # pneumatics2.start()
     # washington.start()
-    # neck_tilt.start()
+    neck_tilt.start()
     # neck_rot.start()
-    mic.start()
-    yesno.start()
+    # mic.start()
+    # yesno.start()
     timing.join()
 except KeyboardInterrupt:
     print('end')
