@@ -1,7 +1,7 @@
 from i2cservo import miuzei_servo, miuzei_micro
 from pneumatics import solenoid
 from speaker import set_volume, play_track, stop
-from facedet import facedet, spawn
+from scalecam import facedet, spawn
 from ledtest import leds
 from button import yes_button, no_button, init_button
 from voice import detect, yn, resetspoken, stfugng, unstfugng
@@ -138,7 +138,7 @@ def speaker_talk_thrd():
                 ynthing = None
         if (no == True) and (talking == False):
             track = random.randint(26,31)
-            print('track',track)
+            print('track',track, 'no track')
             play_track(track,0)
             talk()
             unstfugng()
@@ -179,10 +179,10 @@ def button_thrd():
         if (yes_button() == True) and (talking == False) and (answered == False):
             yes_counter += 1
             answered = True
-            print(yes_counter)
+            print(yes_counter, "yes button")
         if no_button() == True:
             no = True
-            print('no')
+            print('no button')
         else:
             no = False
         time.sleep(0.01)
@@ -236,19 +236,19 @@ yesno = threading.Thread(target=yesno_thrd)
 
 try:
     timing.start()
-    # button.start()
-    # speaker_talk.start()
+    button.start()
+    speaker_talk.start()
     # speaker_waves.start()
     # flag.start()
-    # camera.start()
+    camera.start()
     # lights.start()
     # pneumatics1.start()
     # pneumatics2.start()
     # washington.start()
-    neck_tilt.start()
+    # neck_tilt.start()
     # neck_rot.start()
-    # mic.start()
-    # yesno.start()
+    mic.start()
+    yesno.start()
     timing.join()
 except KeyboardInterrupt:
     print('end')

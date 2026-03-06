@@ -6,11 +6,54 @@ from picamera2 import Picamera2, Preview
 from i2cservo import miuzei_servo, miuzei_micro
 import threading
 import math
+import keyboard
+
+
 
 #integrated face detection algorithim and movements
-newPeople = False
 def facedet():
-    global kill, rot_deg, tilt_deg, oldFace, newFace, newPeople
+    global kill, rot_deg, tilt_deg, oldFace, newFace, newPeople, x_deg, y_deg 
+    newPeople = False
+    kill = 0
+    oldFace = None
+    oldFace2 = None
+    oldFace3 = None
+    oldFace4 = None
+    oldFace5 = None
+    oldFace6 = None
+    oldFace7 = None
+    newFace = None
+
+    x_deg = 90
+    y_deg = 10
+
+    miuzei_micro(1, 90, 1)
+    miuzei_micro(2, 10, 1)
+
+    def x_tilt():
+        global x_deg, kill
+        while True:
+            if 180 > x_deg > 0:
+                miuzei_micro(1, x_deg, 1)
+            if kill == 1:
+                break
+            time.sleep(1)
+
+    def y_tilt():
+        global y_deg, kill
+        while True:
+            if 30 > y_deg > 0:
+                miuzei_micro(2, y_deg, 1)
+            if kill == 1:
+                break
+            time.sleep(1)
+
+    neck_rot = threading.Thread(target=x_tilt)
+    neck_tilt = threading.Thread(target=y_tilt)
+
+    neck_rot.start()
+    neck_tilt.start()
+    
     cam = Picamera2()
     cam.configure(cam.create_preview_configuration(lores={"size": (640, 480)}, display="lores"))
     cam.start()
@@ -29,8 +72,8 @@ def facedet():
     PTORSCALE = SIZER/SIZEP
     PROJX = 0.25 #inches
     PROJY = 0.75 #inches
-    XOFF = 1
-    YOFF = 0
+    XOFF = 3
+    YOFF = -9
 
     while True:
         image = cam.capture_array() 
@@ -40,6 +83,18 @@ def facedet():
         image = cv2.rotate(image, cv2.ROTATE_90_CLOCKWISE)
         faces = detector.detect(image)
         if faces[1] is not None: 
+            oldFace7 = oldFace6
+            oldFace6 = oldFace5
+            oldFace5 = oldFace4
+            oldFace4 = oldFace3
+            oldFace3 = oldFace2
+            oldFace2 = oldFace
+            oldFace = newFace
+            newFace = faces[1]
+            # print(oldFace7, oldFace6, oldFace5, oldFace4, oldFace3, oldFace2, oldFace, newFace)
+            if ((oldFace is None) and (oldFace2 is None) and (oldFace3 is None) and (oldFace4 is None) and 
+                (oldFace5 is None) and (oldFace6 is None) and (oldFace7 is None) and (newFace is not None)):
+                newPeople = True
             for face in faces[1]:
                 x, y, w, h = map(int, face[:4])
                 centerX = (x+x+w)/2
@@ -69,21 +124,33 @@ def facedet():
                 xangle = xangle * (180/math.pi)
                 yangle = yangle * (180/math.pi)
 
-        cv2.imshow('image',image)
+                x_deg = (-1*xangle + 85)*1.1
+                y_deg = (yangle + 10)*1.1
+
+        # cv2.imshow('image',image)
 
         key = cv2.waitKey(1) & 0xFF
-        if key == ord('q'):
+        if key == ord('q') or keyboard.is_pressed('q'):
             kill = 1
             break
-        if key == ord('b'):
+        if key == ord('b') or keyboard.is_pressed('b'):
             print('--------------------------')
             print('size', size,'depth', depth, 'centerX', centerX, 'realx', realx, 'realy', realy)
             print('xz', xz, 'yz', yz, 'newrealx', newrealx, 'newrealy', newrealy)
             print('xangle', xangle, 'yangle', yangle)
+            print('x_deg', x_deg, 'y_deg', y_deg)
             print('--------------------------')
 
     cv2.destroyAllWindows()
 
     cv2.waitKey(0)
 
-facedet()
+def spawn():
+    global newPeople
+    if newPeople == True:
+        #print('found person')
+        return True
+    else:
+        return False
+
+# facedet()
