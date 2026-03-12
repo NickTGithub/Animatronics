@@ -152,7 +152,7 @@ def speaker_talk_thrd():
 def speaker_waves_thrd():
     global no, timer
     time.sleep(3)
-    set_volume(10, 1)
+    set_volume(100, 1)
     play_track(1, 1)
     while True:
         if timer >= 400:
@@ -164,12 +164,23 @@ def camera_thrd():
     facedet()
 
 def lights_thrd():
-    leds(35,50,35,3,29,1) #below boat
-    leds(240,190,120,29,34,1) #right spotlight
-    leds(50,40,30,34,112,1) #top strip
-    leds(250,215,130,112,117,1) #left spotlight
-    leds(0,0,0,29,30,1) #turns off that one annoying pixel 
-    # leds(0,0,0,1,117,1)
+    ticker = 0
+    while True:
+        if (ticker) % 2 == 0:
+            leds(35,50,35,3,29,2) #below boat
+            leds(25,20,200,4,29,2)
+        elif (ticker) % 2 == 1:
+            
+            leds(25,20,200,3,29,2)
+            leds(35,50,35,4,29,2) #below boat
+        leds(240,190,120,29,34,1) #right spotlight
+        leds(50,40,30,34,112,1) #top strip
+        leds(250,215,130,112,117,1) #left spotlight
+        leds(0,0,0,29,30,1) #turns off that one annoying pixel 
+        # leds(255,255,255,1,117,1)
+        time.sleep(0.1)
+        ticker += 1
+        
 
 def button_thrd():
     global yes_counter, no, talking, answered
@@ -236,19 +247,19 @@ yesno = threading.Thread(target=yesno_thrd)
 
 try:
     timing.start()
-    button.start()
-    speaker_talk.start()
+    # button.start()
+    # speaker_talk.start()
     # speaker_waves.start()
     # flag.start()
-    camera.start()
-    # lights.start()
+    # camera.start()
+    lights.start()
     # pneumatics1.start()
     # pneumatics2.start()
     # washington.start()
     # neck_tilt.start()
     # neck_rot.start()
-    mic.start()
-    yesno.start()
+    # mic.start()
+    # yesno.start()
     timing.join()
 except KeyboardInterrupt:
     print('end')
