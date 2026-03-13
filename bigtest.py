@@ -170,7 +170,6 @@ def lights_thrd():
             leds(35,50,35,3,29,2) #below boat
             leds(25,20,200,4,29,2)
         elif (ticker) % 2 == 1:
-            
             leds(25,20,200,3,29,2)
             leds(35,50,35,4,29,2) #below boat
         leds(240,190,120,29,34,1) #right spotlight
@@ -178,7 +177,7 @@ def lights_thrd():
         leds(250,215,130,112,117,1) #left spotlight
         leds(0,0,0,29,30,1) #turns off that one annoying pixel 
         # leds(255,255,255,1,117,1)
-        time.sleep(0.1)
+        time.sleep(0.05)
         ticker += 1
         
 
