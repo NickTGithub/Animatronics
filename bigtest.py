@@ -5,6 +5,7 @@ from scalecam import facedet, spawn
 from ledtest import leds
 from button import yes_button, no_button, init_button
 from voice import detect, yn, resetspoken, stfugng, unstfugng
+from motor import motor
 
 import random
 import threading
@@ -29,8 +30,28 @@ import json
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
+
 init_button()
 talking = False
+
+def waves_thrd():
+    global talking
+    while True:
+        if talking == True:
+            motor(23,24,0)
+        for i in range(100,151,5):
+            if talking == True:
+                motor(23,24,0)
+            else:
+                motor(23,24,i-50)
+        for i in range(150,99,-1):
+            if talking == True:
+                motor(23,24,0)
+            else:
+                motor(23,24,i-50)
+
+        
+
 def timing_thrd():
     global timer,ynthing
     timer = 0
@@ -243,27 +264,30 @@ timing = threading.Thread(target=timing_thrd)
 washington = threading.Thread(target=washington_thrd)
 mic = threading.Thread(target=mic_thrd)
 yesno = threading.Thread(target=yesno_thrd)
+waves = threading.Thread(target=waves_thrd)
 
 try:
     timing.start()
-    # button.start()
-    # speaker_talk.start()
-    # speaker_waves.start()
+    button.start()
+    speaker_talk.start()
+    speaker_waves.start()
     # flag.start()
-    # camera.start()
-    lights.start()
+    camera.start()
+    # lights.start()
     # pneumatics1.start()
     # pneumatics2.start()
     # washington.start()
     # neck_tilt.start()
     # neck_rot.start()
-    # mic.start()
-    # yesno.start()
+    mic.start()
+    yesno.start()
+    # waves.start()
     timing.join()
 except KeyboardInterrupt:
     print('end')
-finally:
     leds(0,0,0,1,117,1)
+    motor(24,23,0)
+finally:
     stop(1)
     stop(0)
     GPIO.cleanup()

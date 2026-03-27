@@ -26,7 +26,7 @@ def audio_callback(indata, a, b, c):
         spoken = None
 
 yeslist = ['yes','yeah','maybe','yay','ok','okay','yesh','yea']
-nolist = ['no','nay']
+nolist = ['no','nay','nah','though','do']
 output = 'maybe'
 tryYN = False
 
@@ -81,7 +81,7 @@ def unstfugng():
 def detect():
     global spoken, yeslist, nolist, output, tryYN
     #gets raw imput from microphone
-    with sd.InputStream(device=2,samplerate=48000, blocksize=8000, dtype='int16', channels=1, callback=audio_callback):
+    with sd.InputStream(device=1,samplerate=48000, blocksize=8000, dtype='int16', channels=1, callback=audio_callback):
         print('go')
         while True:
         
