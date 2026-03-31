@@ -12,3 +12,4 @@ time.sleep(30)
 picam2.stop_preview()
 
 
+#hi jij

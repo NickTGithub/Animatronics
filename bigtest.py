@@ -34,8 +34,19 @@ GPIO.setwarnings(False)
 init_button()
 talking = False
 
+GPIO.setup(13, GPIO.IN)
+GPIO.setup(6, GPIO.IN)
+GPIO.setup(5, GPIO.IN)
+
 def waves_thrd():
     global talking
+    read = GPIO.input(13)
+    while True:
+        if read == GPIO.HIGH:
+            print('turned on')
+            break
+        read = GPIO.input(13)
+        time.sleep(0.0001)
     while True:
         if talking == True:
             motor(23,24,0)
@@ -49,8 +60,6 @@ def waves_thrd():
                 motor(23,24,0)
             else:
                 motor(23,24,i-50)
-
-        
 
 def timing_thrd():
     global timer,ynthing
@@ -103,6 +112,13 @@ def neck_rot_thrd():
 
 
 def pneumatics2_thrd():
+    read = GPIO.input(13)
+    while True:
+        if read == GPIO.HIGH:
+            print('turned on')
+            break
+        read = GPIO.input(13)
+        time.sleep(0.0001)
     print('1')
     time.sleep(1)
     for i in range(0,4):
@@ -110,11 +126,18 @@ def pneumatics2_thrd():
         solenoid(27,22,False,1)
         
 def pneumatics1_thrd():
+    read = GPIO.input(13)
+    while True:
+        if read == GPIO.HIGH:
+            print('turned on')
+            break
+        read = GPIO.input(13)
+        time.sleep(0.0001)
     time.sleep(1)
     print('2')
     for i in range(0,30):
-        solenoid(13,26,True,1)
-        solenoid(13,26,False,1)
+        solenoid(19,26,True,1)
+        solenoid(19,26,False,1)
 
 def talk():
     global track, talking, answered, durations
@@ -129,6 +152,13 @@ def talk():
 
 def speaker_talk_thrd():
     global yes_counter, talking, no, answered, ynthing, durations, track
+    read = GPIO.input(6)
+    while True:
+        if read == GPIO.HIGH:
+            print('turned on')
+            break
+        read = GPIO.input(6)
+        time.sleep(0.0001)
     talking = False
     answered = False
     unstfugng()
@@ -174,6 +204,13 @@ def speaker_waves_thrd():
     global no, timer
     time.sleep(3)
     set_volume(100, 1)
+    read = GPIO.input(13)
+    while True:
+        if read == GPIO.HIGH:
+            print('turned on')
+            break
+        read = GPIO.input(13)
+        time.sleep(0.0001)
     play_track(1, 1)
     while True:
         if timer >= 400:
@@ -181,10 +218,24 @@ def speaker_waves_thrd():
         time.sleep(0.01)
 
 def camera_thrd():
+    read = GPIO.input(6)
+    while True:
+        if read == GPIO.HIGH:
+            print('turned on')
+            break
+        read = GPIO.input(6)
+        time.sleep(0.0001)
     print('camera')
     facedet()
 
 def lights_thrd():
+    read = GPIO.input(13)
+    while True:
+        if read == GPIO.HIGH:
+            print('turned on')
+            break
+        read = GPIO.input(13)
+        time.sleep(0.0001)
     ticker = 0
     while True:
         if (ticker) % 2 == 0:
@@ -204,6 +255,13 @@ def lights_thrd():
 
 def button_thrd():
     global yes_counter, no, talking, answered
+    read = GPIO.input(6)
+    while True:
+        if read == GPIO.HIGH:
+            print('turned on')
+            break
+        read = GPIO.input(6)
+        time.sleep(0.0001)
     no = False
     yes_counter = 0
     while True:
@@ -223,6 +281,14 @@ def mic_thrd():
 
 def yesno_thrd():
     global yes_counter, no, talking, answered, ynthing
+    answered = False
+    read = GPIO.input(6)
+    while True:
+        if read == GPIO.HIGH:
+            print('turned on')
+            break
+        read = GPIO.input(6)
+        time.sleep(0.0001)
     while True:
         ynthing = None
         no = False
@@ -281,7 +347,7 @@ try:
     # neck_rot.start()
     mic.start()
     yesno.start()
-    # waves.start()
+    waves.start()
     timing.join()
 except KeyboardInterrupt:
     print('end')
