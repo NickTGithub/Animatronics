@@ -112,6 +112,7 @@ def neck_rot_thrd():
 
 
 def pneumatics2_thrd():
+    global randTime
     read = GPIO.input(13)
     while True:
         if read == GPIO.HIGH:
@@ -120,12 +121,14 @@ def pneumatics2_thrd():
         read = GPIO.input(13)
         time.sleep(0.0001)
     print('1')
-    time.sleep(1)
-    for i in range(0,4):
+    time.sleep(1.1)
+    for i in range(0,30):
         solenoid(27,22,True,1)
         solenoid(27,22,False,1)
+        time.sleep(randTime)
         
 def pneumatics1_thrd():
+    global randTime
     read = GPIO.input(13)
     while True:
         if read == GPIO.HIGH:
@@ -138,6 +141,8 @@ def pneumatics1_thrd():
     for i in range(0,30):
         solenoid(19,26,True,1)
         solenoid(19,26,False,1)
+        randTime = random.randrange(3,8)
+        time.sleep(randTime)
 
 def talk():
     global track, talking, answered, durations
@@ -238,18 +243,24 @@ def lights_thrd():
         time.sleep(0.0001)
     ticker = 0
     while True:
-        if (ticker) % 2 == 0:
-            leds(35,50,35,3,29,2) #below boat
-            leds(25,20,200,4,29,2)
-        elif (ticker) % 2 == 1:
-            leds(25,20,200,3,29,2)
-            leds(35,50,35,4,29,2) #below boat
-        leds(240,190,120,29,34,1) #right spotlight
-        leds(50,40,30,34,112,1) #top strip
-        leds(250,215,130,112,117,1) #left spotlight
-        leds(0,0,0,29,30,1) #turns off that one annoying pixel 
+        # if (ticker) % 2 == 0:
+        #     leds(35,50,35,3,29,2) #below boat
+        #     leds(25,20,200,4,29,2)
+        # elif (ticker) % 2 == 1:
+        #     leds(25,20,200,3,29,2)
+        #     leds(35,50,35,4,29,2) #below boat
+        # leds(240,190,120,29,34,1) #right spotlight
+        # leds(50,40,30,34,112,1) #top strip
+        # leds(250,215,130,112,117,1) #left spotlight
+        # leds(0,0,0,29,30,1) #turns off that one annoying pixel 
         # leds(255,255,255,1,117,1)
-        time.sleep(0.05)
+        for i in range(0,67):
+            #leds(255,255,255,0,68,1)
+            leds(50,50,50,i,i+5,1)
+            leds(0,127,255,i+6,i+10,1)
+            leds(50,50,50,i+11,i+30,1)
+            leds(0,127,255,i+31,i+35,1)
+        
         ticker += 1
         
 
@@ -334,20 +345,20 @@ waves = threading.Thread(target=waves_thrd)
 
 try:
     timing.start()
-    button.start()
-    speaker_talk.start()
-    speaker_waves.start()
+    # button.start()
+    # speaker_talk.start()
+    # speaker_waves.start()
     # flag.start()
-    camera.start()
+    # camera.start()
     # lights.start()
-    # pneumatics1.start()
-    # pneumatics2.start()
+    pneumatics1.start()
+    pneumatics2.start()
     # washington.start()
     # neck_tilt.start()
     # neck_rot.start()
-    mic.start()
-    yesno.start()
-    waves.start()
+    # mic.start()
+    # yesno.start()
+    # waves.start()
     timing.join()
 except KeyboardInterrupt:
     print('end')
