@@ -69,38 +69,45 @@ def timing_thrd():
         time.sleep(0.1)
 
 def flag_thrd():
-    global talking
-    while True:
-        if talking==True:
-            miuzei_micro(0,30,0.5)
-        else:
-            miuzei_micro(0,10,5)
-            miuzei_micro(0,45,5)
+    miuzei_servo(7,0,1)
 
-def rower_thrd():
-    for i in range(0,30):
-        miuzei_servo(5,0,0.5)
-        miuzei_servo(5,60,0.5)
+def back_thrd():
+    read = GPIO.input(13)
+    while True:
+        if read == GPIO.HIGH:
+            print('turned on')
+            break
+        read = GPIO.input(13)
+        time.sleep(0.0001)
+    while True:
+        miuzei_servo(4,50,1)
+        miuzei_servo(4,80,1)
+
+def mid_thrd(): 
+    read = GPIO.input(13)
+    while True:
+        if read == GPIO.HIGH:
+            print('turned on')
+            break
+        read = GPIO.input(13)
+        time.sleep(0.0001)
+    while True:
+        miuzei_servo(5,30,1)
+        miuzei_servo(5,50,1)
+
+def front_thrd():
+    miuzei_servo(6,0,1)
 
 def washington_thrd():
-    global talking
-    while True:
-        if talking==True:
-            miuzei_micro(3,115,3)
-        else:
-            miuzei_micro(3,50,5)
-            miuzei_micro(3,180,5)
+    miuzei_micro(3,115,3)
 
 def neck_tilt_thrd():
     while True:
-        # if talking==True:
-        #     miuzei_micro(2,25,0.5)
-        # else:
-        #     miuzei_micro(2,0,5)
-        #     miuzei_micro(2,50,5)
-        miuzei_micro(2,25,2)
-        miuzei_micro(2,50,2)
-        miuzei_micro(2,0,2)
+        if talking==True:
+            miuzei_micro(2,25,2)
+        else:
+            miuzei_micro(2,50,2)
+            miuzei_micro(2,0,2)
 
 def neck_rot_thrd():
     while True:
@@ -113,12 +120,12 @@ def neck_rot_thrd():
 
 def pneumatics2_thrd():
     global randTime
-    read = GPIO.input(13)
+    read = GPIO.input(5)
     while True:
         if read == GPIO.HIGH:
             print('turned on')
             break
-        read = GPIO.input(13)
+        read = GPIO.input(5)
         time.sleep(0.0001)
     print('1')
     time.sleep(1.1)
@@ -129,12 +136,12 @@ def pneumatics2_thrd():
         
 def pneumatics1_thrd():
     global randTime
-    read = GPIO.input(13)
+    read = GPIO.input(5)
     while True:
         if read == GPIO.HIGH:
             print('turned on')
             break
-        read = GPIO.input(13)
+        read = GPIO.input(5)
         time.sleep(0.0001)
     time.sleep(1)
     print('2')
@@ -330,7 +337,12 @@ def yesno_thrd():
 pneumatics1 = threading.Thread(target=pneumatics1_thrd)
 pneumatics2 = threading.Thread(target=pneumatics2_thrd)
 neck_tilt = threading.Thread(target=neck_tilt_thrd)
+
 flag = threading.Thread(target=flag_thrd)
+back = threading.Thread(target=back_thrd)
+mid = threading.Thread(target=mid_thrd)
+front = threading.Thread(target=front_thrd)
+
 neck_rot = threading.Thread(target=neck_rot_thrd)
 speaker_talk = threading.Thread(target=speaker_talk_thrd)
 speaker_waves = threading.Thread(target=speaker_waves_thrd)
@@ -348,12 +360,15 @@ try:
     # button.start()
     # speaker_talk.start()
     # speaker_waves.start()
-    # flag.start()
     # camera.start()
     # lights.start()
-    pneumatics1.start()
-    pneumatics2.start()
+    # pneumatics1.start()
+    # pneumatics2.start()
     # washington.start()
+    # flag.start()
+    back.start()
+    mid.start()
+    # front.start()
     # neck_tilt.start()
     # neck_rot.start()
     # mic.start()

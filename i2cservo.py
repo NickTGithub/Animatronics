@@ -20,15 +20,5 @@ def miuzei_micro(device,angle,delay):
     miuzei.servo[device].angle = angle
     time.sleep(delay)
 
-# miuzei_micro(1,100,1)
-
-# miuzei_micro(1,0,1)
-
-# miuzei_micro(1,180,1)
-
-
-# miuzei_micro(2,0,1)
-
-# miuzei_micro(2,10,1)
-
-# miuzei_micro(2,20,1)
+# miuzei_servo(5,50,1)
+# miuzei_servo(5,75,1)
