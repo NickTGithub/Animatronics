@@ -69,7 +69,16 @@ def timing_thrd():
         time.sleep(0.1)
 
 def flag_thrd():
-    miuzei_servo(7,0,1)
+    read = GPIO.input(13)
+    while True:
+        if read == GPIO.HIGH:
+            print('turned on')
+            break
+        read = GPIO.input(13)
+        time.sleep(0.0001)
+    while True:
+        miuzei_servo(7,0,1)
+        miuzei_servo(7,40,1)
 
 def back_thrd():
     read = GPIO.input(13)
@@ -99,7 +108,16 @@ def front_thrd():
     miuzei_servo(6,0,1)
 
 def washington_thrd():
-    miuzei_micro(3,115,3)
+    read = GPIO.input(13)
+    while True:
+        if read == GPIO.HIGH:
+            print('turned on')
+            break
+        read = GPIO.input(13)
+        time.sleep(0.0001)
+    while True:
+        miuzei_micro(3,30,1)
+        miuzei_micro(3,140,1)
 
 def neck_tilt_thrd():
     while True:
@@ -364,8 +382,8 @@ try:
     # lights.start()
     # pneumatics1.start()
     # pneumatics2.start()
-    # washington.start()
-    # flag.start()
+    washington.start()
+    flag.start()
     back.start()
     mid.start()
     # front.start()
