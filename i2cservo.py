@@ -19,4 +19,3 @@ def miuzei_micro(device,angle,delay):
     miuzei.servo[device].set_pulse_width_range(500, 2500)
     miuzei.servo[device].angle = angle
     time.sleep(delay)
-

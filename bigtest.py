@@ -68,6 +68,18 @@ def timing_thrd():
         timer += 0.1
         time.sleep(0.1)
 
+def string_thrd():
+    read = GPIO.input(13)
+    while True:
+        if read == GPIO.HIGH:
+            print('turned on')
+            break
+        read = GPIO.input(13)
+        time.sleep(0.0001)
+    while True:
+        miuzei_micro(0,180,0.6)
+        miuzei_micro(0,0,0.6)
+
 def flag_thrd():
     read = GPIO.input(13)
     while True:
@@ -77,8 +89,8 @@ def flag_thrd():
         read = GPIO.input(13)
         time.sleep(0.0001)
     while True:
-        miuzei_servo(7,0,1)
-        miuzei_servo(7,40,1)
+        miuzei_servo(7,random.randrange(0,11),random.randrange(5,16)/10)
+        miuzei_servo(7,random.randrange(30,41),random.randrange(5,16)/10)
 
 def back_thrd():
     read = GPIO.input(13)
@@ -143,7 +155,6 @@ def neck_rot_thrd():
         else:
             miuzei_micro(1,15,5)
             miuzei_micro(1,115,5)
-
 
 def pneumatics2_thrd():
     global randTime
@@ -365,6 +376,7 @@ pneumatics1 = threading.Thread(target=pneumatics1_thrd)
 pneumatics2 = threading.Thread(target=pneumatics2_thrd)
 neck_tilt = threading.Thread(target=neck_tilt_thrd)
 
+string = threading.Thread(target=string_thrd)
 flag = threading.Thread(target=flag_thrd)
 back = threading.Thread(target=back_thrd)
 mid = threading.Thread(target=mid_thrd)
@@ -386,21 +398,22 @@ try:
     timing.start()
     # button.start()
     # speaker_talk.start()
-    speaker_waves.start()
+    # speaker_waves.start()
     # camera.start()
-    lights.start()
-    pneumatics1.start()
-    pneumatics2.start()
-    washington.start()
+    # lights.start()
+    # pneumatics1.start()
+    # pneumatics2.start()
+    # washington.start()
+    string.start()
     flag.start()
-    back.start()
-    mid.start()
-    front.start()
+    # back.start()
+    # mid.start()
+    # front.start()
     # neck_tilt.start()
     # neck_rot.start()
     # mic.start()
     # yesno.start()
-    waves.start()
+    # waves.start()
     timing.join()
 except KeyboardInterrupt:
     print('end')
