@@ -105,7 +105,16 @@ def mid_thrd():
         miuzei_servo(5,50,1)
 
 def front_thrd():
-    miuzei_servo(6,0,1)
+    read = GPIO.input(13)
+    while True:
+        if read == GPIO.HIGH:
+            print('turned on')
+            break
+        read = GPIO.input(13)
+        time.sleep(0.0001)
+    while True:
+        miuzei_micro(6,65,1)
+        miuzei_micro(6,90,1)
 
 def washington_thrd():
     read = GPIO.input(13)
@@ -377,21 +386,21 @@ try:
     timing.start()
     # button.start()
     # speaker_talk.start()
-    # speaker_waves.start()
+    speaker_waves.start()
     # camera.start()
-    # lights.start()
-    # pneumatics1.start()
-    # pneumatics2.start()
+    lights.start()
+    pneumatics1.start()
+    pneumatics2.start()
     washington.start()
     flag.start()
     back.start()
     mid.start()
-    # front.start()
+    front.start()
     # neck_tilt.start()
     # neck_rot.start()
     # mic.start()
     # yesno.start()
-    # waves.start()
+    waves.start()
     timing.join()
 except KeyboardInterrupt:
     print('end')
