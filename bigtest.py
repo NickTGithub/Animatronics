@@ -287,7 +287,14 @@ def lights_thrd():
         read = GPIO.input(13)
         time.sleep(0.0001)
     ticker = 0
+    ind =0
+    leds(10,10,60,67,89,1)
+    leds(20,20,20,89,112,1)
+    leds(60,10,10,112,134,1)
+    # leds(255,255,255,102,106,1)
+    # leds(255,255,255,90,94,1)
     while True:
+        ind += 1
         # if (ticker) % 2 == 0:
         #     leds(35,50,35,3,29,2) #below boat
         #     leds(25,20,200,4,29,2)
@@ -299,12 +306,15 @@ def lights_thrd():
         # leds(250,215,130,112,117,1) #left spotlight
         # leds(0,0,0,29,30,1) #turns off that one annoying pixel 
         # leds(255,255,255,1,117,1)
-        for i in range(0,67):
+
+        for i in range(0,47):
             #leds(255,255,255,0,68,1)
             leds(50,50,50,i,i+5,1)
             leds(0,127,255,i+6,i+10,1)
-            leds(50,50,50,i+11,i+30,1)
-            leds(0,127,255,i+31,i+35,1)
+            leds(50,50,50,i+11,i+15,1)
+            leds(0,127,255,i+16,i+20,1)
+
+            
         
         ticker += 1
         
@@ -400,12 +410,12 @@ try:
     # speaker_talk.start()
     # speaker_waves.start()
     # camera.start()
-    # lights.start()
+    lights.start()
     # pneumatics1.start()
     # pneumatics2.start()
     # washington.start()
-    string.start()
-    flag.start()
+    # string.start()
+    # flag.start()
     # back.start()
     # mid.start()
     # front.start()
