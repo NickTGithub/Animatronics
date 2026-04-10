@@ -48,8 +48,6 @@ def waves_thrd():
         read = GPIO.input(13)
         time.sleep(0.0001)
     while True:
-        if talking == True:
-            motor(23,24,0)
         for i in range(100,151,5):
             if talking == True:
                 motor(23,24,0)
@@ -89,8 +87,8 @@ def flag_thrd():
         read = GPIO.input(13)
         time.sleep(0.0001)
     while True:
-        miuzei_servo(7,random.randrange(0,11),random.randrange(5,16)/10)
-        miuzei_servo(7,random.randrange(30,41),random.randrange(5,16)/10)
+        miuzei_servo(7,random.randrange(0,21),random.randrange(7,21)/10)
+        miuzei_servo(7,random.randrange(20,41),random.randrange(7,21)/10)
 
 def back_thrd():
     read = GPIO.input(13)
@@ -101,8 +99,8 @@ def back_thrd():
         read = GPIO.input(13)
         time.sleep(0.0001)
     while True:
-        miuzei_servo(4,50,1)
-        miuzei_servo(4,80,1)
+        miuzei_servo(4,random.randrange(50,61),random.randrange(3,11)/10)
+        miuzei_servo(4,random.randrange(70,81),random.randrange(3,11)/10)
 
 def mid_thrd(): 
     read = GPIO.input(13)
@@ -113,8 +111,8 @@ def mid_thrd():
         read = GPIO.input(13)
         time.sleep(0.0001)
     while True:
-        miuzei_servo(5,30,1)
-        miuzei_servo(5,50,1)
+        miuzei_servo(5,random.randrange(30,41),random.randrange(3,11)/10)
+        miuzei_servo(5,random.randrange(45,56),random.randrange(3,11)/10)
 
 def front_thrd():
     read = GPIO.input(13)
@@ -125,8 +123,8 @@ def front_thrd():
         read = GPIO.input(13)
         time.sleep(0.0001)
     while True:
-        miuzei_micro(6,65,1)
-        miuzei_micro(6,90,1)
+        miuzei_servo(6,random.randrange(65,76),random.randrange(3,11)/10)
+        miuzei_servo(6,random.randrange(81,91),random.randrange(3,11)/10)
 
 def washington_thrd():
     read = GPIO.input(13)
@@ -137,8 +135,8 @@ def washington_thrd():
         read = GPIO.input(13)
         time.sleep(0.0001)
     while True:
-        miuzei_micro(3,30,1)
-        miuzei_micro(3,140,1)
+        miuzei_micro(3,random.randrange(30,51),random.randrange(7,31)/10)
+        miuzei_micro(3,random.randrange(12,141),random.randrange(7,21)/10)
 
 def neck_tilt_thrd():
     while True:
@@ -288,31 +286,26 @@ def lights_thrd():
         time.sleep(0.0001)
     ticker = 0
     ind =0
-    leds(10,10,60,67,89,1)
-    leds(20,20,20,89,112,1)
-    leds(60,10,10,112,134,1)
+    leds(5,3,1,67,134,1)
+    leds(255,205,105,83,84,1)
+    leds(255,205,105,105,106,1)
     # leds(255,255,255,102,106,1)
     # leds(255,255,255,90,94,1)
     while True:
-        ind += 1
-        # if (ticker) % 2 == 0:
-        #     leds(35,50,35,3,29,2) #below boat
-        #     leds(25,20,200,4,29,2)
-        # elif (ticker) % 2 == 1:
-        #     leds(25,20,200,3,29,2)
-        #     leds(35,50,35,4,29,2) #below boat
-        # leds(240,190,120,29,34,1) #right spotlight
-        # leds(50,40,30,34,112,1) #top strip
-        # leds(250,215,130,112,117,1) #left spotlight
-        # leds(0,0,0,29,30,1) #turns off that one annoying pixel 
-        # leds(255,255,255,1,117,1)
-
+        if random.randrange(0,4) == 0:
+            randspot = random.randrange(67,131)
+            leds(255,255,255,randspot, randspot+3,1)
+            time.sleep(0.4)
+            leds(5,3,1,67,134,1)
+            print('lightninggg')
+        leds(255,205,105,83,84,1)
+        leds(255,205,105,105,106,1)
         for i in range(0,47):
             #leds(255,255,255,0,68,1)
-            leds(50,50,50,i,i+5,1)
-            leds(0,127,255,i+6,i+10,1)
-            leds(50,50,50,i+11,i+15,1)
-            leds(0,127,255,i+16,i+20,1)
+            leds(0,10,0,i,i+5,1)
+            leds(0,0,125,i+6,i+10,1)
+            leds(0,10,0,i+11,i+15,1)
+            leds(0,200,125,i+16,i+20,1)
 
             
         
@@ -377,7 +370,7 @@ def yesno_thrd():
             resetspoken()
             stfugng()
             print('nooo')
-        time.sleep(0.01)
+        time.sleep(0.0001)
 
 
 
@@ -406,24 +399,24 @@ waves = threading.Thread(target=waves_thrd)
 
 try:
     timing.start()
-    # button.start()
-    # speaker_talk.start()
-    # speaker_waves.start()
-    # camera.start()
+    button.start()
+    speaker_talk.start()
+    speaker_waves.start()
+    camera.start()
     lights.start()
     # pneumatics1.start()
     # pneumatics2.start()
-    # washington.start()
-    # string.start()
-    # flag.start()
+    washington.start()
+    string.start()
+    flag.start()
     # back.start()
-    # mid.start()
-    # front.start()
+    mid.start()
+    front.start()
     # neck_tilt.start()
     # neck_rot.start()
-    # mic.start()
-    # yesno.start()
-    # waves.start()
+    mic.start()
+    yesno.start()
+    waves.start()
     timing.join()
 except KeyboardInterrupt:
     print('end')
