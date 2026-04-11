@@ -48,16 +48,11 @@ def waves_thrd():
         read = GPIO.input(13)
         time.sleep(0.0001)
     while True:
-        for i in range(100,151,5):
-            if talking == True:
-                motor(23,24,0)
-            else:
-                motor(23,24,i-50)
-        for i in range(150,99,-1):
-            if talking == True:
-                motor(23,24,0)
-            else:
-                motor(23,24,i-50)
+        motor(23,24,50)
+        # for i in range(100,151,5):
+        #     motor(23,24,i-50)
+        # for i in range(150,99,-1):
+        #     motor(23,24,i-50)
 
 def timing_thrd():
     global timer,ynthing
@@ -99,7 +94,7 @@ def back_thrd():
         read = GPIO.input(13)
         time.sleep(0.0001)
     while True:
-        miuzei_servo(4,random.randrange(50,61),random.randrange(3,11)/10)
+        miuzei_servo(4,random.randrange(40,51),random.randrange(3,11)/10)
         miuzei_servo(4,random.randrange(70,81),random.randrange(3,11)/10)
 
 def mid_thrd(): 
@@ -227,14 +222,6 @@ def speaker_talk_thrd():
             resetspoken()
             yes_counter = 0
             new_counter = 1
-        for i in range(0,8):
-            if yes_counter == (i*2)+1:
-                track = random.randint(randStart[i],randEnd[i])
-                talk()
-                unstfugng()
-                resetspoken()
-                yes_counter = (i+1)*2
-                ynthing = None
         if (no == True) and (talking == False):
             track = random.randint(26,31)
             print('track',track, 'no track')
@@ -246,6 +233,14 @@ def speaker_talk_thrd():
             time.sleep(5)
             new_counter = 0
             no = False
+        for i in range(0,8):
+            if yes_counter == (i*2)+1:
+                track = random.randint(randStart[i],randEnd[i])
+                talk()
+                unstfugng()
+                resetspoken()
+                yes_counter = (i+1)*2
+                ynthing = None
         time.sleep(0.01)
     
 def speaker_waves_thrd():
@@ -399,23 +394,23 @@ waves = threading.Thread(target=waves_thrd)
 
 try:
     timing.start()
-    button.start()
-    speaker_talk.start()
-    speaker_waves.start()
-    camera.start()
-    lights.start()
+    # button.start()
+    # speaker_talk.start()
+    # speaker_waves.start()
+    # camera.start()
+    # lights.start()
     # pneumatics1.start()
     # pneumatics2.start()
-    washington.start()
-    string.start()
-    flag.start()
+    # washington.start()
+    # string.start()
+    # flag.start()
     # back.start()
-    mid.start()
-    front.start()
+    # mid.start()
+    # front.start()
     # neck_tilt.start()
     # neck_rot.start()
-    mic.start()
-    yesno.start()
+    # mic.start()
+    # yesno.start()
     waves.start()
     timing.join()
 except KeyboardInterrupt:
