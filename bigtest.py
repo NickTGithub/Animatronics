@@ -202,6 +202,7 @@ def speaker_talk_thrd():
             break
         read = GPIO.input(6)
         time.sleep(0.0001)
+    print('STARTING TALKINIG AEFJE')
     talking = False
     answered = False
     unstfugng()
@@ -214,15 +215,26 @@ def speaker_talk_thrd():
     randStart = [5,8,11,14,17,20,23]
     randEnd = [7,10,13,16,19,22,25]
     while True:
-        if (spawn() == True) and (talking == False) and (new_counter == 0):
-            print('enter')
-            track = random.randint(2,4)
-            talk()
-            unstfugng()
+        read = GPIO.input(6)
+        ynthing = None
+        if talking == False and answered == False:
+            ynthing = yn()
+
+        if (ynthing == 'yes' or yes_button() == True) and answered == False:
+            yes_counter += 1
+            answered = True
+            print('yescounter=', yes_counter)
+            print('yn() return',ynthing)
             resetspoken()
-            yes_counter = 0
-            new_counter = 1
-        if (no == True) and (talking == False):
+            stfugng()
+            ynthing = None
+
+        if ynthing == 'no' or no_button() == True:
+            print('yn() return',ynthing)
+            resetspoken()
+            stfugng()
+            print('nooo')
+            print('ononononononon')
             track = random.randint(26,31)
             print('track',track, 'no track')
             play_track(track,0)
@@ -232,16 +244,24 @@ def speaker_talk_thrd():
             yes_counter = 0
             time.sleep(5)
             new_counter = 0
-            no = False
+
+        if (spawn() == True) and (talking == False) and (new_counter == 0) and (read == GPIO.HIGH):
+            print('enter')
+            track = random.randint(2,4)
+            talk()
+            unstfugng()
+            resetspoken()
+            yes_counter = 0
+            new_counter = 1
         for i in range(0,8):
             if yes_counter == (i*2)+1:
                 track = random.randint(randStart[i],randEnd[i])
                 talk()
                 unstfugng()
                 resetspoken()
-                yes_counter = (i+1)*2
+                yes_counter = (i*2)+2
                 ynthing = None
-        time.sleep(0.01)
+        time.sleep(0.001)
     
 def speaker_waves_thrd():
     global no, timer
@@ -297,10 +317,10 @@ def lights_thrd():
         leds(255,205,105,105,106,1)
         for i in range(0,47):
             #leds(255,255,255,0,68,1)
-            leds(0,10,0,i,i+5,1)
-            leds(0,0,125,i+6,i+10,1)
-            leds(0,10,0,i+11,i+15,1)
-            leds(0,200,125,i+16,i+20,1)
+            leds(0,0,10,i,i+5,1)
+            leds(60,80,120,i+6,i+10,1)
+            leds(0,0,10,i+11,i+15,1)
+            leds(60,80,120,i+16,i+20,1)
 
             
         
@@ -344,43 +364,16 @@ def yesno_thrd():
         read = GPIO.input(6)
         time.sleep(0.0001)
     while True:
-        ynthing = None
-        no = False
-        if talking == False and answered == False:
-            ynthing = yn()
-        if ynthing != None and answered == False and talking == False:
-            pass
-        if ynthing == None:
-            no = False
-        elif ynthing == 'yes' and answered == False:
-            yes_counter += 1
-            answered = True
-            print('yescounter=', yes_counter)
-            print('yn() return',ynthing)
-            resetspoken()
-            stfugng()
-            ynthing = None
-        elif ynthing == 'no':
-            no = True
-            resetspoken()
-            stfugng()
-            print('nooo')
+        
         time.sleep(0.0001)
-
-
-
 
 pneumatics1 = threading.Thread(target=pneumatics1_thrd)
 pneumatics2 = threading.Thread(target=pneumatics2_thrd)
-neck_tilt = threading.Thread(target=neck_tilt_thrd)
-
 string = threading.Thread(target=string_thrd)
 flag = threading.Thread(target=flag_thrd)
 back = threading.Thread(target=back_thrd)
 mid = threading.Thread(target=mid_thrd)
 front = threading.Thread(target=front_thrd)
-
-neck_rot = threading.Thread(target=neck_rot_thrd)
 speaker_talk = threading.Thread(target=speaker_talk_thrd)
 speaker_waves = threading.Thread(target=speaker_waves_thrd)
 camera = threading.Thread(target=camera_thrd)
@@ -395,21 +388,19 @@ waves = threading.Thread(target=waves_thrd)
 try:
     timing.start()
     # button.start()
-    # speaker_talk.start()
-    # speaker_waves.start()
-    # camera.start()
-    # lights.start()
-    # pneumatics1.start()
-    # pneumatics2.start()
-    # washington.start()
-    # string.start()
-    # flag.start()
-    # back.start()
-    # mid.start()
-    # front.start()
-    # neck_tilt.start()
-    # neck_rot.start()
-    # mic.start()
+    speaker_talk.start()
+    speaker_waves.start()
+    camera.start()
+    lights.start()
+    pneumatics1.start()
+    pneumatics2.start()
+    washington.start()
+    string.start()
+    flag.start()
+    back.start()
+    mid.start()
+    front.start()
+    mic.start()
     # yesno.start()
     waves.start()
     timing.join()

@@ -40,7 +40,6 @@ def yn():
     else:
         found = False
         if spoken != None and tryYN == True:
-            #print('spoken',spoken)
             for i in yeslist:
                 if i in spoken and found == False:
                     output = 'yes heard'
@@ -100,7 +99,6 @@ def detect():
                 partial = json.loads(record.PartialResult())
                 spoken = partial.get('partial', '')
                 print(spoken, end='\r')
-
             if stfu == True:
                 spoken = None
                 
