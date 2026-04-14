@@ -136,7 +136,7 @@ def washington_thrd():
 def neck_tilt_thrd():
     while True:
         if talking==True:
-            miuzei_micro(2,25,2)
+            pass
         else:
             miuzei_micro(2,50,2)
             miuzei_micro(2,0,2)
@@ -144,7 +144,7 @@ def neck_tilt_thrd():
 def neck_rot_thrd():
     while True:
         if talking==True:
-            miuzei_micro(1,100,5)
+            pass
         else:
             miuzei_micro(1,15,5)
             miuzei_micro(1,115,5)
@@ -281,12 +281,12 @@ def speaker_waves_thrd():
         time.sleep(0.01)
 
 def camera_thrd():
-    read = GPIO.input(6)
+    read = GPIO.input(13)
     while True:
         if read == GPIO.HIGH:
             print('turned on')
             break
-        read = GPIO.input(6)
+        read = GPIO.input(13)
         time.sleep(0.0001)
     print('camera')
     facedet()
@@ -325,47 +325,9 @@ def lights_thrd():
             
         
         ticker += 1
-        
-
-def button_thrd():
-    global yes_counter, no, talking, answered
-    read = GPIO.input(6)
-    while True:
-        if read == GPIO.HIGH:
-            print('turned on')
-            break
-        read = GPIO.input(6)
-        time.sleep(0.0001)
-    no = False
-    yes_counter = 0
-    while True:
-        if (yes_button() == True) and (talking == False) and (answered == False):
-            yes_counter += 1
-            answered = True
-            print(yes_counter, "yes button")
-        if no_button() == True:
-            no = True
-            print('no button')
-        else:
-            no = False
-        time.sleep(0.01)
 
 def mic_thrd():
     detect()
-
-def yesno_thrd():
-    global yes_counter, no, talking, answered, ynthing
-    answered = False
-    read = GPIO.input(6)
-    while True:
-        if read == GPIO.HIGH:
-            print('turned on')
-            break
-        read = GPIO.input(6)
-        time.sleep(0.0001)
-    while True:
-        
-        time.sleep(0.0001)
 
 pneumatics1 = threading.Thread(target=pneumatics1_thrd)
 pneumatics2 = threading.Thread(target=pneumatics2_thrd)
@@ -378,16 +340,15 @@ speaker_talk = threading.Thread(target=speaker_talk_thrd)
 speaker_waves = threading.Thread(target=speaker_waves_thrd)
 camera = threading.Thread(target=camera_thrd)
 lights = threading.Thread(target=lights_thrd)
-button = threading.Thread(target=button_thrd)
 timing = threading.Thread(target=timing_thrd)
 washington = threading.Thread(target=washington_thrd)
 mic = threading.Thread(target=mic_thrd)
-yesno = threading.Thread(target=yesno_thrd)
 waves = threading.Thread(target=waves_thrd)
+neck_tilt = threading.Thread(target=neck_tilt_thrd)
+neck_rot = threading.Thread(target=neck_rot_thrd)
 
 try:
     timing.start()
-    # button.start()
     speaker_talk.start()
     speaker_waves.start()
     camera.start()
@@ -401,8 +362,9 @@ try:
     mid.start()
     front.start()
     mic.start()
-    # yesno.start()
     waves.start()
+    # neck_tilt.start()
+    # neck_rot.start()
     timing.join()
 except KeyboardInterrupt:
     print('end')

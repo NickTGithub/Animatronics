@@ -72,8 +72,9 @@ def facedet():
     PTORSCALE = SIZER/SIZEP
     PROJX = 0.25 #inches
     PROJY = 0.75 #inches
-    XOFF = 3
-    YOFF = -9
+    XOFF = 1.5 #inches
+    YOFF = -9 #inches
+    ZOFF = 0 #inches
 
     while True:
         image = cam.capture_array() 
@@ -107,7 +108,7 @@ def facedet():
                 centerX -= 320
                 size = h
                 scale = SIZEP/size
-                depth = scale*LENR 
+                depth = (scale*LENR) + ZOFF 
 
                 realx = PTORSCALE * centerX
                 realy = PTORSCALE * centerY
