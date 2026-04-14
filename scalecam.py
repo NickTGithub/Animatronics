@@ -72,8 +72,8 @@ def facedet():
     PTORSCALE = SIZER/SIZEP
     PROJX = 0.25 #inches
     PROJY = 0.75 #inches
-    XOFF = 1.5 #inches
-    YOFF = -9 #inches
+    XOFF = -1.5 #inches
+    YOFF = -7 #inches
     ZOFF = 0 #inches
 
     while True:
@@ -125,10 +125,16 @@ def facedet():
                 xangle = xangle * (180/math.pi)
                 yangle = yangle * (180/math.pi)
 
-                x_deg = (-1*xangle + 85)*1.1
-                y_deg = (yangle + 10)*1.1
+                x_deg = (-1.3*xangle + 75)
+                y_deg = (1.3*yangle + 10)
 
-        # cv2.imshow('image',image)
+                if 180 > x_deg > 0:
+                    miuzei_micro(1, x_deg, 1)
+
+                if 50 > y_deg > 0:
+                    miuzei_micro(2, y_deg, 1)
+
+        cv2.imshow('image',image)
 
         key = cv2.waitKey(1) & 0xFF
         if key == ord('q') or keyboard.is_pressed('q'):
