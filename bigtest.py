@@ -15,7 +15,7 @@ from adafruit_servokit import ServoKit
 import cv2
 import numpy as np
 import os
-from picamera2 import Picamera2, Preview
+from picamera2 import Picamera2, Preview    
 import math
 import board
 import neopixel
@@ -38,9 +38,12 @@ GPIO.setup(13, GPIO.IN)
 GPIO.setup(6, GPIO.IN)
 GPIO.setup(5, GPIO.IN)
 
+dead = False
+
 def waves_thrd():
-    global talking
+    global talking, dead
     read = GPIO.input(13)
+    motor(23,24,0)
     while True:
         if read == GPIO.HIGH:
             print('turned on')
@@ -49,6 +52,9 @@ def waves_thrd():
         time.sleep(0.0001)
     while True:
         motor(23,24,100)
+        if dead == True:
+            motor(23,24,0)
+            break
         # for i in range(100,151,5):
         #     motor(23,24,i-50)
         # for i in range(150,99,-1):
@@ -370,9 +376,8 @@ try:
 except KeyboardInterrupt:
     print('end')
     leds(0,0,0,1,117,1)
-    motor(23,24,0)
+    dead = True
 finally:
     stop(1)
     stop(0)
-    motor(23,24,0)
     GPIO.cleanup()
