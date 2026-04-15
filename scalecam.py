@@ -134,7 +134,7 @@ def facedet():
                 if 50 > y_deg > 0:
                     miuzei_micro(2, y_deg, 1)
 
-        cv2.imshow('image',image)
+        #cv2.imshow('image',image)
 
         key = cv2.waitKey(1) & 0xFF
         if key == ord('q') or keyboard.is_pressed('q'):
