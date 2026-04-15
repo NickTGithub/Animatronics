@@ -48,11 +48,12 @@ def waves_thrd():
         read = GPIO.input(13)
         time.sleep(0.0001)
     while True:
-        motor(23,24,50)
+        motor(23,24,100)
         # for i in range(100,151,5):
         #     motor(23,24,i-50)
         # for i in range(150,99,-1):
         #     motor(23,24,i-50)
+    motor(23,24,0)
 
 def timing_thrd():
     global timer,ynthing
@@ -94,8 +95,8 @@ def back_thrd():
         read = GPIO.input(13)
         time.sleep(0.0001)
     while True:
-        miuzei_servo(4,random.randrange(40,51),random.randrange(3,11)/10)
-        miuzei_servo(4,random.randrange(70,81),random.randrange(3,11)/10)
+        miuzei_servo(4,random.randrange(100,106),random.randrange(3,11)/10)
+        miuzei_servo(4,random.randrange(110,121),random.randrange(3,11)/10)
 
 def mid_thrd(): 
     read = GPIO.input(13)
@@ -276,7 +277,7 @@ def speaker_waves_thrd():
         time.sleep(0.0001)
     play_track(1, 1)
     while True:
-        if timer >= 400:
+        if timer >= 1000:
             stop(1)
         time.sleep(0.01)
 
@@ -349,19 +350,19 @@ neck_rot = threading.Thread(target=neck_rot_thrd)
 
 try:
     timing.start()
-    speaker_talk.start()
-    speaker_waves.start()
-    camera.start()
-    lights.start()
-    pneumatics1.start()
-    pneumatics2.start()
-    washington.start()
-    string.start()
-    flag.start()
-    back.start()
-    mid.start()
-    front.start()
-    mic.start()
+    # speaker_talk.start()
+    # speaker_waves.start()
+    # camera.start()
+    # lights.start()
+    # pneumatics1.start()
+    # pneumatics2.start()
+    # washington.start()
+    # string.start()
+    # flag.start()
+    # back.start()
+    # mid.start()
+    # front.start()
+    # mic.start()
     waves.start()
     # neck_tilt.start()
     # neck_rot.start()
@@ -369,8 +370,9 @@ try:
 except KeyboardInterrupt:
     print('end')
     leds(0,0,0,1,117,1)
-    motor(24,23,0)
+    motor(23,24,0)
 finally:
     stop(1)
     stop(0)
+    motor(23,24,0)
     GPIO.cleanup()
