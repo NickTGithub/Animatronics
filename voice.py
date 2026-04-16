@@ -25,8 +25,8 @@ def audio_callback(indata, a, b, c):
     else:
         spoken = None
 
-yeslist = ['yes','yeah','maybe','yay','ok','okay','yesh','yea']
-nolist = ['no','nay','nah','though','do']
+yeslist = ['yes','yeah','maybe','yay','ok','okay','yesh','yea','sure']
+nolist = ['no','nay','nah','though','do','oh']
 output = 'maybe'
 tryYN = False
 

@@ -173,7 +173,7 @@ def pneumatics2_thrd():
         time.sleep(0.0001)
     print('1')
     time.sleep(1.1)
-    for i in range(0,30):
+    for i in range(0,60):
         solenoid(27,22,True,1)
         solenoid(27,22,False,1)
         time.sleep(randTime)
@@ -189,7 +189,7 @@ def pneumatics1_thrd():
         time.sleep(0.0001)
     time.sleep(1)
     print('2')
-    for i in range(0,30):
+    for i in range(0,60):
         solenoid(19,26,True,1)
         solenoid(19,26,False,1)
         randTime = random.randrange(3,8)
