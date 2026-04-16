@@ -38,6 +38,12 @@ GPIO.setup(13, GPIO.IN)
 GPIO.setup(6, GPIO.IN)
 GPIO.setup(5, GPIO.IN)
 
+GPIO.setup(24,GPIO.OUT)
+GPIO.setup(23,GPIO.OUT)
+
+GPIO.output(24,False)
+GPIO.output(23,False)
+
 dead = False
 
 def waves_thrd():
@@ -50,7 +56,7 @@ def waves_thrd():
             break
         read = GPIO.input(13)
         time.sleep(0.0001)
-    while True:
+    while dead == False:
         motor(23,24,100)
         if dead == True:
             motor(23,24,0)
@@ -210,6 +216,7 @@ def speaker_talk_thrd():
         read = GPIO.input(6)
         time.sleep(0.0001)
     print('STARTING TALKINIG AEFJE')
+    yes_counter=0
     talking = False
     answered = False
     unstfugng()
@@ -308,17 +315,17 @@ def lights_thrd():
         time.sleep(0.0001)
     ticker = 0
     ind =0
-    leds(5,3,1,67,134,1)
+    leds(5,3,1,67,133,1)
     leds(255,205,105,83,84,1)
     leds(255,205,105,105,106,1)
     # leds(255,255,255,102,106,1)
     # leds(255,255,255,90,94,1)
     while True:
         if random.randrange(0,4) == 0:
-            randspot = random.randrange(67,131)
+            randspot = random.randrange(67,130)
             leds(255,255,255,randspot, randspot+3,1)
             time.sleep(0.4)
-            leds(5,3,1,67,134,1)
+            leds(5,3,1,67,133,1)
             print('lightninggg')
         leds(255,205,105,83,84,1)
         leds(255,205,105,105,106,1)
@@ -356,20 +363,20 @@ neck_rot = threading.Thread(target=neck_rot_thrd)
 
 try:
     timing.start()
-    # speaker_talk.start()
-    # speaker_waves.start()
-    # camera.start()
-    # lights.start()
-    # pneumatics1.start()
-    # pneumatics2.start()
-    # washington.start()
-    # string.start()
-    # flag.start()
-    # back.start()
-    # mid.start()
-    # front.start()
-    # mic.start()
-    waves.start()
+    speaker_talk.start()
+    speaker_waves.start()
+    camera.start()
+    lights.start()
+    pneumatics1.start()
+    pneumatics2.start()
+    washington.start()
+    string.start()
+    flag.start()
+    back.start()
+    mid.start()
+    front.start()
+    mic.start()
+    # waves.start()
     # neck_tilt.start()
     # neck_rot.start()
     timing.join()
@@ -377,6 +384,7 @@ except KeyboardInterrupt:
     print('end')
     leds(0,0,0,1,117,1)
     dead = True
+    time.sleep(1)
 finally:
     stop(1)
     stop(0)
