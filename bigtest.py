@@ -1,7 +1,7 @@
 from i2cservo import miuzei_servo, miuzei_micro
 from pneumatics import solenoid
 from speaker import set_volume, play_track, stop
-from scalecam import facedet, spawn
+from camera import facedet, spawn
 from ledtest import leds
 from button import yes_button, no_button, init_button
 from voice import detect, yn, resetspoken, stfugng, unstfugng
