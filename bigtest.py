@@ -49,23 +49,19 @@ dead = False
 def waves_thrd():
     global talking, dead
     read = GPIO.input(13)
-    motor(23,24,0)
+    # motor(23,24,0)
     while True:
         if read == GPIO.HIGH:
             print('turned on')
             break
         read = GPIO.input(13)
         time.sleep(0.0001)
+    GPIO.output(23, False)
+    p = GPIO.PWM(24, 50)
+    p.start(100)
     while dead == False:
-        motor(23,24,100)
-        if dead == True:
-            motor(23,24,0)
-            break
-        # for i in range(100,151,5):
-        #     motor(23,24,i-50)
-        # for i in range(150,99,-1):
-        #     motor(23,24,i-50)
-    motor(23,24,0)
+        time.sleep(0.1)
+    p.stop()
 
 def timing_thrd():
     global timer,ynthing
@@ -107,7 +103,7 @@ def back_thrd():
         read = GPIO.input(13)
         time.sleep(0.0001)
     while True:
-        miuzei_servo(4,random.randrange(100,106),random.randrange(3,11)/10)
+        miuzei_servo(4,random.randrange(90,96),random.randrange(3,11)/10)
         miuzei_servo(4,random.randrange(110,121),random.randrange(3,11)/10)
 
 def mid_thrd(): 
@@ -376,7 +372,7 @@ try:
     mid.start()
     front.start()
     mic.start()
-    # waves.start()
+    waves.start()
     # neck_tilt.start()
     # neck_rot.start()
     timing.join()
@@ -384,6 +380,8 @@ except KeyboardInterrupt:
     print('end')
     leds(0,0,0,1,117,1)
     dead = True
+    GPIO.output(24,False)
+    GPIO.output(23,False)   
     time.sleep(1)
 finally:
     stop(1)
