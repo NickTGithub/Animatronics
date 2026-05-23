@@ -14,12 +14,10 @@ def playVid(file):
     else:
         file = str(file)
     file = 'subtitles/' + file + '.mp4'
-    print('playing' + file)
+    print('playing ' + file)
     capture = cv2.VideoCapture(file)
 
-    isTrue, frame = capture.read()
-    cv2.imshow("window", frame)
-    cv2.waitKey(50)
+
 
     while True:
         isTrue, frame = capture.read()
@@ -38,5 +36,5 @@ def showBg():
 
 # for i in range(1,32):
 #     playVid(i)
-# playVid(17)
+playVid(17)
 cv2.destroyAllWindows()
