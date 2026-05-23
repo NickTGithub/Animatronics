@@ -1,0 +1,10 @@
+git reflog --all
+ls .git/refs/heads/
+cat .git/refs/heads/<your-branch-name>
+rm .git/objects/20/aeabdf30db2871e91aee8cd49f641c73015422
+git fsck --full
+find .git/objects -size 0 -delete
+git fetch origin
+git reset --hard origin/main
+git fsck --full
+git status
