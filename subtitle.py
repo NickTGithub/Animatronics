@@ -36,7 +36,7 @@ def showBg():
     cv2.imshow("window", bg)
     cv2.waitKey(20)
 
-for i in range(1,32):
-    playVid(i)
-
+# for i in range(1,32):
+#     playVid(i)
+playVid(17)
 cv2.destroyAllWindows()
