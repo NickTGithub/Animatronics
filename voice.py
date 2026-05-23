@@ -3,7 +3,6 @@ import queue
 import sounddevice as sd
 from vosk import Model, KaldiRecognizer, SetLogLevel
 import json
-from downsample import downsample_audio
 
 SetLogLevel(-1)
 

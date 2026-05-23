@@ -36,5 +36,6 @@ def showBg():
 
 # for i in range(1,32):
 #     playVid(i)
-playVid(2)
-cv2.destroyAllWindows()
+# playVid(17)
+# showBg()
+# cv2.destroyAllWindows()

@@ -1,20 +1,14 @@
-import RPi.GPIO as GPIO
+from gpiozero import Motor, OutputDevice
+from gpiozero.pins.rpigpio import RPiGPIOFactory
 import time
 
-#motors
-
-GPIO.setwarnings(False)
-GPIO.setmode(GPIO.BCM)
-
 def motor(in1, in2, dc):
-    global p
-    GPIO.setmode(GPIO.BCM)
-    GPIO.setup(in1,GPIO.OUT)
-    GPIO.setup(in2,GPIO.OUT)
-    GPIO.output(in1, False)
-    p = GPIO.PWM(in2, 50)
-    p.start(dc)
+    from gpiozero import PWMOutputDevice, OutputDevice
+    in1_dev = OutputDevice(in1)
+    in2_dev = PWMOutputDevice(in2, frequency=50)
+    in1_dev.off()
+    in2_dev.value = dc / 100
     time.sleep(0.025)
-    p.stop()
-
-
+    in2_dev.off()
+    in1_dev.close()
+    in2_dev.close()

@@ -6,11 +6,12 @@ from ledtest import leds
 from button import yes_button, no_button, init_button
 from voice import detect, yn, resetspoken, stfugng, unstfugng
 from motor import motor
+from subtitle import playVid, showBg
 
 import random
 import threading
 import time
-import RPi.GPIO as GPIO
+from gpiozero import InputDevice, OutputDevice, PWMOutputDevice
 from adafruit_servokit import ServoKit
 import cv2
 import numpy as np
@@ -28,115 +29,96 @@ import json
 
 #integration
 
-GPIO.setmode(GPIO.BCM)
-GPIO.setwarnings(False)
-
 init_button()
 talking = False
 
-GPIO.setup(13, GPIO.IN)
-GPIO.setup(6, GPIO.IN)
-GPIO.setup(5, GPIO.IN)
+pin13 = InputDevice(13)
+pin6  = InputDevice(6)
+pin5  = InputDevice(5)
 
-GPIO.setup(24,GPIO.OUT)
-GPIO.setup(23,GPIO.OUT)
+pin24 = PWMOutputDevice(24, frequency=50)
+pin23 = OutputDevice(23)
 
-GPIO.output(24,False)
-GPIO.output(23,False)
+pin24.off()
+pin23.off()
 
 dead = False
 
 def waves_thrd():
     global talking, dead
-    read = GPIO.input(13)
-    # motor(23,24,0)
     while True:
-        if read == GPIO.HIGH:
+        if pin13.is_active:
             print('turned on')
             break
-        read = GPIO.input(13)
         time.sleep(0.0001)
-    GPIO.output(23, False)
-    p = GPIO.PWM(24, 50)
-    p.start(100)
+    pin23.off()
+    pin24.value = 1.0
     while dead == False:
         time.sleep(0.1)
-    p.stop()
+    pin24.off()
 
 def timing_thrd():
-    global timer,ynthing
+    global timer, ynthing
     timer = 0
     while True:
         timer += 0.1
         time.sleep(0.1)
 
 def string_thrd():
-    read = GPIO.input(13)
     while True:
-        if read == GPIO.HIGH:
+        if pin13.is_active:
             print('turned on')
             break
-        read = GPIO.input(13)
         time.sleep(0.0001)
     while True:
         miuzei_micro(0,180,0.6)
         miuzei_micro(0,0,0.6)
 
 def flag_thrd():
-    read = GPIO.input(13)
     while True:
-        if read == GPIO.HIGH:
+        if pin13.is_active:
             print('turned on')
             break
-        read = GPIO.input(13)
         time.sleep(0.0001)
     while True:
         miuzei_servo(7,random.randrange(0,21),random.randrange(7,21)/10)
         miuzei_servo(7,random.randrange(20,41),random.randrange(7,21)/10)
 
 def back_thrd():
-    read = GPIO.input(13)
     while True:
-        if read == GPIO.HIGH:
+        if pin13.is_active:
             print('turned on')
             break
-        read = GPIO.input(13)
         time.sleep(0.0001)
     while True:
         miuzei_servo(4,random.randrange(90,96),random.randrange(3,11)/10)
         miuzei_servo(4,random.randrange(110,121),random.randrange(3,11)/10)
 
 def mid_thrd(): 
-    read = GPIO.input(13)
     while True:
-        if read == GPIO.HIGH:
+        if pin13.is_active:
             print('turned on')
             break
-        read = GPIO.input(13)
         time.sleep(0.0001)
     while True:
         miuzei_servo(5,random.randrange(30,41),random.randrange(3,11)/10)
         miuzei_servo(5,random.randrange(45,56),random.randrange(3,11)/10)
 
 def front_thrd():
-    read = GPIO.input(13)
     while True:
-        if read == GPIO.HIGH:
+        if pin13.is_active:
             print('turned on')
             break
-        read = GPIO.input(13)
         time.sleep(0.0001)
     while True:
         miuzei_servo(6,random.randrange(65,76),random.randrange(3,11)/10)
         miuzei_servo(6,random.randrange(81,91),random.randrange(3,11)/10)
 
 def washington_thrd():
-    read = GPIO.input(13)
     while True:
-        if read == GPIO.HIGH:
+        if pin13.is_active:
             print('turned on')
             break
-        read = GPIO.input(13)
         time.sleep(0.0001)
     while True:
         miuzei_micro(3,random.randrange(30,51),random.randrange(7,31)/10)
@@ -160,12 +142,10 @@ def neck_rot_thrd():
 
 def pneumatics2_thrd():
     global randTime
-    read = GPIO.input(5)
     while True:
-        if read == GPIO.HIGH:
+        if pin5.is_active:
             print('turned on')
             break
-        read = GPIO.input(5)
         time.sleep(0.0001)
     print('1')
     time.sleep(1.1)
@@ -176,12 +156,10 @@ def pneumatics2_thrd():
         
 def pneumatics1_thrd():
     global randTime
-    read = GPIO.input(5)
     while True:
-        if read == GPIO.HIGH:
+        if pin5.is_active:
             print('turned on')
             break
-        read = GPIO.input(5)
         time.sleep(0.0001)
     time.sleep(1)
     print('2')
@@ -195,6 +173,8 @@ def talk():
     global track, talking, answered, durations
     print(track)
     play_track(track,0)
+    playVid(track)
+    showBg()
     talking = True
     stfugng()
     time.sleep(durations[track])
@@ -204,12 +184,11 @@ def talk():
 
 def speaker_talk_thrd():
     global yes_counter, talking, no, answered, ynthing, durations, track
-    read = GPIO.input(6)
+    showBg()
     while True:
-        if read == GPIO.HIGH:
+        if pin6.is_active:
             print('turned on')
             break
-        read = GPIO.input(6)
         time.sleep(0.0001)
     print('STARTING TALKINIG AEFJE')
     yes_counter=0
@@ -225,7 +204,6 @@ def speaker_talk_thrd():
     randStart = [5,8,11,14,17,20,23]
     randEnd = [7,10,13,16,19,22,25]
     while True:
-        read = GPIO.input(6)
         ynthing = None
         if talking == False and answered == False:
             ynthing = yn()
@@ -255,7 +233,7 @@ def speaker_talk_thrd():
             time.sleep(5)
             new_counter = 0
 
-        if (spawn() == True) and (talking == False) and (new_counter == 0) and (read == GPIO.HIGH):
+        if (spawn() == True) and (talking == False) and (new_counter == 0) and (pin6.is_active):
             print('enter')
             track = random.randint(2,4)
             talk()
@@ -277,12 +255,10 @@ def speaker_waves_thrd():
     global no, timer
     time.sleep(3)
     set_volume(100, 1)
-    read = GPIO.input(13)
     while True:
-        if read == GPIO.HIGH:
+        if pin13.is_active:
             print('turned on')
             break
-        read = GPIO.input(13)
         time.sleep(0.0001)
     play_track(1, 1)
     while True:
@@ -291,31 +267,25 @@ def speaker_waves_thrd():
         time.sleep(0.01)
 
 def camera_thrd():
-    read = GPIO.input(13)
     while True:
-        if read == GPIO.HIGH:
+        if pin13.is_active:
             print('turned on')
             break
-        read = GPIO.input(13)
         time.sleep(0.0001)
     print('camera')
     facedet()
 
 def lights_thrd():
-    read = GPIO.input(13)
     while True:
-        if read == GPIO.HIGH:
+        if pin13.is_active:
             print('turned on')
             break
-        read = GPIO.input(13)
         time.sleep(0.0001)
     ticker = 0
-    ind =0
+    ind = 0
     leds(5,3,1,67,133,1)
     leds(255,205,105,83,84,1)
     leds(255,205,105,105,106,1)
-    # leds(255,255,255,102,106,1)
-    # leds(255,255,255,90,94,1)
     while True:
         if random.randrange(0,4) == 0:
             randspot = random.randrange(67,130)
@@ -326,14 +296,10 @@ def lights_thrd():
         leds(255,205,105,83,84,1)
         leds(255,205,105,105,106,1)
         for i in range(0,47):
-            #leds(255,255,255,0,68,1)
             leds(0,0,10,i,i+5,1)
             leds(60,80,120,i+6,i+10,1)
             leds(0,0,10,i+11,i+15,1)
             leds(60,80,120,i+16,i+20,1)
-
-            
-        
         ticker += 1
 
 def mic_thrd():
@@ -380,10 +346,15 @@ except KeyboardInterrupt:
     print('end')
     leds(0,0,0,1,117,1)
     dead = True
-    GPIO.output(24,False)
-    GPIO.output(23,False)   
+    pin24.off()
+    pin23.off()
     time.sleep(1)
 finally:
     stop(1)
     stop(0)
-    GPIO.cleanup()
+    pin13.close()
+    pin6.close()
+    pin5.close()
+    pin24.close()
+    pin23.close()
+    cv2.destroyAllWindows()

@@ -1,24 +1,22 @@
+from gpiozero import Button
 import time
-import RPi.GPIO as GPIO
 
-#button go click click
+yes_btn = None
+no_btn = None
 
 def init_button():
-    GPIO.setup(12, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-    GPIO.setup(25, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+    global yes_btn, no_btn
+    yes_btn = Button(12, pull_up=True)
+    no_btn = Button(25, pull_up=True)
 
 def yes_button():
-    read = GPIO.input(12)
-    if read == GPIO.LOW:
+    if yes_btn and yes_btn.is_pressed:
         time.sleep(0.2)
         return True
-    else:
-        return False
-    
+    return False
+
 def no_button():
-    read = GPIO.input(25)
-    if read == GPIO.LOW:
+    if no_btn and no_btn.is_pressed:
         time.sleep(0.2)
         return True
-    else:
-        return False
+    return False
