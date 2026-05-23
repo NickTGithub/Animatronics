@@ -131,24 +131,26 @@ def facedet():
                 # if 50 > y_deg > 0:
                 #     miuzei_micro(2, y_deg, 1)
                 #MAKE SURE TO UNCOMMENT THIS
+        #cv2.imshow('image',image)
 
-        cv2.imshow('image',image)
+        # key = cv2.waitKey(1) & 0xFF
+        # if key == ord('q') or keyboard.is_pressed('q'):
+        # if keyboard.is_pressed('q'):
+        #     kill = 1
+        #     break
+        # #if key == ord('b') or keyboard.is_pressed('b'):
+        # if keyboard.is_pressed('b'):
+        #     print('--------------------------')
+        #     print('size', size,'depth', depth, 'centerX', centerX, 'realx', realx, 'realy', realy)
+        #     print('xz', xz, 'yz', yz, 'newrealx', newrealx, 'newrealy', newrealy)
+        #     print('xangle', xangle, 'yangle', yangle)
+        #     print('x_deg', x_deg, 'y_deg', y_deg)
+        #     print('--------------------------')
+        
 
-        key = cv2.waitKey(1) & 0xFF
-        if key == ord('q') or keyboard.is_pressed('q'):
-            kill = 1
-            break
-        if key == ord('b') or keyboard.is_pressed('b'):
-            print('--------------------------')
-            print('size', size,'depth', depth, 'centerX', centerX, 'realx', realx, 'realy', realy)
-            print('xz', xz, 'yz', yz, 'newrealx', newrealx, 'newrealy', newrealy)
-            print('xangle', xangle, 'yangle', yangle)
-            print('x_deg', x_deg, 'y_deg', y_deg)
-            print('--------------------------')
+    #cv2.destroyAllWindows()
 
-    cv2.destroyAllWindows()
-
-    cv2.waitKey(0)
+    #cv2.waitKey(0)
 
 def spawn():
     global newPeople

@@ -6,7 +6,7 @@ from ledtest import leds
 from button import yes_button, no_button, init_button
 from voice import detect, yn, resetspoken, stfugng, unstfugng
 from motor import motor
-from subtitle import playVid, showBg
+#from subtitle import playVid, showBg
 
 import random
 import threading
@@ -44,6 +44,28 @@ pin24.off()
 pin23.off()
 
 dead = False
+
+def playVid(file):
+    global bg
+    if file < 10:
+        file = '0' + str(file)
+    else:
+        file = str(file)
+    file = 'subtitles/' + file + '.mp4'
+    print('playing ' + file)
+    capture = cv2.VideoCapture(file)
+
+    while True:
+        isTrue, frame = capture.read()
+        
+        if not isTrue:
+            print('vid done')
+            break
+        cv2.waitKey(26)
+        cv2.imshow("window", frame)
+    cv2.waitKey(20)
+    cv2.imshow("window", bg)
+    cv2.waitKey(20)
 
 def waves_thrd():
     global talking, dead
@@ -125,22 +147,6 @@ def washington_thrd():
         miuzei_micro(3,random.randrange(30,51),random.randrange(7,31)/10)
         miuzei_micro(3,random.randrange(12,141),random.randrange(7,21)/10)
 
-def neck_tilt_thrd():
-    while True:
-        if talking==True:
-            pass
-        else:
-            miuzei_micro(2,50,2)
-            miuzei_micro(2,0,2)
-
-def neck_rot_thrd():
-    while True:
-        if talking==True:
-            pass
-        else:
-            miuzei_micro(1,15,5)
-            miuzei_micro(1,115,5)
-
 def pneumatics2_thrd():
     global randTime
     while True:
@@ -171,21 +177,28 @@ def pneumatics1_thrd():
         time.sleep(randTime)
 
 def talk():
-    global track, talking, answered, durations
+    global track, talking, answered, durations, bg
     print(track)
     play_track(track,0)
     playVid(track)
-    showBg()
     talking = True
     stfugng()
-    time.sleep(durations[track])
+    time.sleep(1)
+    cv2.imshow("window", bg)
     stop(0)
     talking = False
     answered = False
+    unstfugng()
+    resetspoken()
 
 def speaker_talk_thrd():
-    global yes_counter, talking, no, answered, ynthing, durations, track
-    showBg()
+    global yes_counter, talking, no, answered, ynthing, durations, track, bg
+    cv2.namedWindow("window", cv2.WINDOW_AUTOSIZE)
+    cv2.setWindowProperty("window", cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
+    bg = cv2.imread('background.jpg')
+    cv2.waitKey(20)
+    cv2.imshow("window", bg)
+    cv2.waitKey(20)
     while True:
         if pin6.is_active:
             print('turned on')
@@ -217,7 +230,6 @@ def speaker_talk_thrd():
             resetspoken()
             stfugng()
             ynthing = None
-
         if ynthing == 'no' or no_button() == True:
             print('yn() return',ynthing)
             resetspoken()
@@ -225,11 +237,7 @@ def speaker_talk_thrd():
             print('nooo')
             print('ononononononon')
             track = random.randint(26,31)
-            print('track',track, 'no track')
-            play_track(track,0)
             talk()
-            unstfugng()
-            resetspoken()
             yes_counter = 0
             time.sleep(5)
             new_counter = 0
@@ -237,16 +245,12 @@ def speaker_talk_thrd():
             print('enter')
             track = random.randint(2,4)
             talk()
-            unstfugng()
-            resetspoken()
             yes_counter = 0
             new_counter = 1
         for i in range(0,8):
             if yes_counter == (i*2)+1:
                 track = random.randint(randStart[i],randEnd[i])
                 talk()
-                unstfugng()
-                resetspoken()
                 yes_counter = (i*2)+2
                 ynthing = None
         time.sleep(0.001)
@@ -320,13 +324,11 @@ timing = threading.Thread(target=timing_thrd)
 washington = threading.Thread(target=washington_thrd)
 mic = threading.Thread(target=mic_thrd)
 waves = threading.Thread(target=waves_thrd)
-neck_tilt = threading.Thread(target=neck_tilt_thrd)
-neck_rot = threading.Thread(target=neck_rot_thrd)
 
 try:
     timing.start()
     speaker_talk.start()
-    speaker_waves.start()
+    # speaker_waves.start()
     camera.start()
     # lights.start()
     # pneumatics1.start()
@@ -339,8 +341,6 @@ try:
     # front.start()
     mic.start()
     # waves.start()
-    # neck_tilt.start()
-    # neck_rot.start()
     timing.join()
 except KeyboardInterrupt:
     print('end')

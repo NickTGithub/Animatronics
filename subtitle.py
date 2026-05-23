@@ -17,14 +17,16 @@ def playVid(file):
     print('playing ' + file)
     capture = cv2.VideoCapture(file)
 
-
-
     while True:
         isTrue, frame = capture.read()
         
-        if cv2.waitKey(20) & 0xFF == ord('d') or not isTrue:
+        if not isTrue:
+            print('vid done')
             break
+        cv2.waitKey(80)
         cv2.imshow("window", frame)
+    cv2.waitKey(20)
+    cv2.imshow("window", bg)
 
 
 
@@ -37,6 +39,7 @@ def showBg():
 # for i in range(1,32):
 #     playVid(i)
 # playVid(17)
-showBg()
 # time.sleep(3)
 # cv2.destroyAllWindows()
+showBg()
+time.sleep(3)
