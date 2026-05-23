@@ -27,9 +27,6 @@ def facedet():
     x_deg = 90
     y_deg = 10
 
-    miuzei_micro(1, 90, 1)
-    miuzei_micro(2, 10, 1)
-
     def x_tilt():
         global x_deg, kill
         while True:
@@ -51,8 +48,8 @@ def facedet():
     neck_rot = threading.Thread(target=x_tilt)
     neck_tilt = threading.Thread(target=y_tilt)
 
-    neck_rot.start()
-    neck_tilt.start()
+    # neck_rot.start()
+    # neck_tilt.start() UNCOMEENT THESE TOO
     
     cam = Picamera2()
     cam.configure(cam.create_preview_configuration(lores={"size": (640, 480)}, display="lores"))
@@ -128,13 +125,14 @@ def facedet():
                 x_deg = (-1.3*xangle + 75)
                 y_deg = (1.3*yangle + 10)
 
-                if 180 > x_deg > 0:
-                    miuzei_micro(1, x_deg, 1)
+                # if 180 > x_deg > 0:
+                #     miuzei_micro(1, x_deg, 1)
 
-                if 50 > y_deg > 0:
-                    miuzei_micro(2, y_deg, 1)
+                # if 50 > y_deg > 0:
+                #     miuzei_micro(2, y_deg, 1)
+                #MAKE SURE TO UNCOMMENT THIS
 
-        #cv2.imshow('image',image)
+        cv2.imshow('image',image)
 
         key = cv2.waitKey(1) & 0xFF
         if key == ord('q') or keyboard.is_pressed('q'):
@@ -155,9 +153,8 @@ def facedet():
 def spawn():
     global newPeople
     if newPeople == True:
-        #print('found person')
+        newPeople = False  
         return True
-    else:
-        return False
+    return False
 
 # facedet()

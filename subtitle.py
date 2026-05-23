@@ -37,5 +37,6 @@ def showBg():
 # for i in range(1,32):
 #     playVid(i)
 # playVid(17)
-# showBg()
+showBg()
+# time.sleep(3)
 # cv2.destroyAllWindows()

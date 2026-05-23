@@ -26,6 +26,7 @@ import sounddevice as sd
 from vosk import Model, KaldiRecognizer, SetLogLevel
 import json
 
+#export DISPLAY=:0
 
 #integration
 
@@ -232,7 +233,6 @@ def speaker_talk_thrd():
             yes_counter = 0
             time.sleep(5)
             new_counter = 0
-
         if (spawn() == True) and (talking == False) and (new_counter == 0) and (pin6.is_active):
             print('enter')
             track = random.randint(2,4)
@@ -328,17 +328,17 @@ try:
     speaker_talk.start()
     speaker_waves.start()
     camera.start()
-    lights.start()
-    pneumatics1.start()
-    pneumatics2.start()
-    washington.start()
-    string.start()
-    flag.start()
-    back.start()
-    mid.start()
-    front.start()
+    # lights.start()
+    # pneumatics1.start()
+    # pneumatics2.start()
+    # washington.start()
+    # string.start()
+    # flag.start()
+    # back.start()
+    # mid.start()
+    # front.start()
     mic.start()
-    waves.start()
+    # waves.start()
     # neck_tilt.start()
     # neck_rot.start()
     timing.join()
