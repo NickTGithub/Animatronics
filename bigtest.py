@@ -6,7 +6,6 @@ from ledtest import leds
 from button import yes_button, no_button, init_button
 from voice import detect, yn, resetspoken, stfugng, unstfugng
 from motor import motor
-#from subtitle import playVid, showBg
 
 import random
 import threading
@@ -180,11 +179,11 @@ def talk():
     global track, talking, answered, durations, bg
     print(track)
     play_track(track,0)
-    playVid(track)
+    #playVid(track)
     talking = True
     stfugng()
     time.sleep(1)
-    cv2.imshow("window", bg)
+    #cv2.imshow("window", bg)
     stop(0)
     talking = False
     answered = False
@@ -193,11 +192,11 @@ def talk():
 
 def speaker_talk_thrd():
     global yes_counter, talking, no, answered, ynthing, durations, track, bg
-    cv2.namedWindow("window", cv2.WINDOW_AUTOSIZE)
-    cv2.setWindowProperty("window", cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
+    #cv2.namedWindow("window", cv2.WINDOW_AUTOSIZE)
+    #cv2.setWindowProperty("window", cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
     bg = cv2.imread('background.jpg')
     cv2.waitKey(20)
-    cv2.imshow("window", bg)
+    #cv2.imshow("window", bg)
     cv2.waitKey(20)
     while True:
         if pin6.is_active:
