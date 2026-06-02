@@ -317,6 +317,15 @@ def lights_thrd():
             end = 67
         leds(60,80,120,start,end,1)
 
+        ticker += 1
+        if ticker == 68:
+            ticker = 0
+
+        if ticker2 != 0:
+            leds(0,20,40,ticker2-1,ticker2,1)
+        else:
+            leds(0,20,40,0,ticker2,1)
+
         start2 = ticker2 + 1
         if start2 > 67:
             start2 = 67
@@ -324,10 +333,6 @@ def lights_thrd():
         if end2 > 67:
             end2 = 67
         leds(60,80,120,start2,end2,1)
-
-        ticker += 1
-        if ticker == 68:
-            ticker = 0
 
         ticker2 += 1
         if ticker2 == 68:
@@ -368,7 +373,7 @@ try:
     # mid.start()
     # front.start()
     # mic.start()
-    # waves.start()
+    waves.start()
     timing.join()
 except KeyboardInterrupt:
     print('WAIT 2 SEC')
