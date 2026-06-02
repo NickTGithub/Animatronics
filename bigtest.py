@@ -279,6 +279,7 @@ def camera_thrd():
     facedet()
 
 def lights_thrd():
+    global dead
     while True:
         if pin13.is_active:
             print('turned on')
@@ -289,7 +290,7 @@ def lights_thrd():
     leds(5,3,1,67,133,1)
     leds(255,205,105,83,84,1)
     leds(255,205,105,105,106,1)
-    while True:
+    while dead == False:
         if random.randrange(0,4) == 0:
             randspot = random.randrange(67,130)
             leds(255,255,255,randspot, randspot+3,1)
@@ -304,6 +305,7 @@ def lights_thrd():
             leds(0,0,10,i+11,i+15,1)
             leds(60,80,120,i+16,i+20,1)
         ticker += 1
+    leds(0,0,0,0,133,1)
 
 def mic_thrd():
     detect()
@@ -326,10 +328,10 @@ waves = threading.Thread(target=waves_thrd)
 
 try:
     timing.start()
-    speaker_talk.start()
+    # speaker_talk.start()
     # speaker_waves.start()
-    camera.start()
-    # lights.start()
+    # camera.start()
+    lights.start()
     # pneumatics1.start()
     # pneumatics2.start()
     # washington.start()
@@ -338,8 +340,8 @@ try:
     # back.start()
     # mid.start()
     # front.start()
-    mic.start()
-    # waves.start()
+    # mic.start()
+    waves.start()
     timing.join()
 except KeyboardInterrupt:
     print('end')
