@@ -286,25 +286,38 @@ def lights_thrd():
             break
         time.sleep(0.0001)
     ticker = 0
-    ind = 0
-    leds(5,3,1,67,133,1)
+    leds(5,3,1,68,133,1)
     leds(255,205,105,83,84,1)
     leds(255,205,105,105,106,1)
+    leds(0,20,40,0,67,1)
+    excludes = [79,80,81,82,83,84,101,102,103,104,105,106]
     while dead == False:
-        if random.randrange(0,4) == 0:
-            randspot = random.randrange(67,130)
+        #lightning
+        if random.randrange(0,25) == 0:
+            done = False
+            while done == False:
+                randspot = random.randrange(67,130)
+                if randspot not in excludes:
+                    done = True
             leds(255,255,255,randspot, randspot+3,1)
-            time.sleep(0.4)
-            leds(5,3,1,67,133,1)
-            print('lightninggg')
-        leds(255,205,105,83,84,1)
-        leds(255,205,105,105,106,1)
-        for i in range(0,47):
-            leds(0,0,10,i,i+5,1)
-            leds(60,80,120,i+6,i+10,1)
-            leds(0,0,10,i+11,i+15,1)
-            leds(60,80,120,i+16,i+20,1)
+            leds(5,3,1,randspot, randspot+3,1)
+
+        #waves
+        if ticker != 0:
+            leds(0,20,40,ticker-1,ticker,1)
+        else:
+            leds(0,20,40,0,ticker,1)
+
+        start = ticker + 1
+        if start > 67:
+            start = 67
+        end = ticker + 6
+        if end > 67:
+            end = 67
+        leds(60,80,120,start,end,1)
         ticker += 1
+        if ticker == 68:
+            ticker = 0
     leds(0,0,0,0,133,1)
 
 def mic_thrd():
@@ -341,15 +354,14 @@ try:
     # mid.start()
     # front.start()
     # mic.start()
-    waves.start()
+    # waves.start()
     timing.join()
 except KeyboardInterrupt:
-    print('end')
+    print('WAIT 2 SEC')
     leds(0,0,0,1,117,1)
     dead = True
     pin24.off()
     pin23.off()
-    time.sleep(1)
 finally:
     stop(1)
     stop(0)
