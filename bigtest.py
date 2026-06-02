@@ -286,6 +286,7 @@ def lights_thrd():
             break
         time.sleep(0.0001)
     ticker = 0
+    ticker2 = 34
     leds(5,3,1,68,133,1)
     leds(255,205,105,83,84,1)
     leds(255,205,105,105,106,1)
@@ -315,9 +316,22 @@ def lights_thrd():
         if end > 67:
             end = 67
         leds(60,80,120,start,end,1)
+
+        start2 = ticker2 + 1
+        if start2 > 67:
+            start2 = 67
+        end2 = ticker2 + 6
+        if end2 > 67:
+            end2 = 67
+        leds(60,80,120,start2,end2,1)
+
         ticker += 1
         if ticker == 68:
             ticker = 0
+
+        ticker2 += 1
+        if ticker2 == 68:
+            ticker2 = 0
     leds(0,0,0,0,133,1)
 
 def mic_thrd():
