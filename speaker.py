@@ -3,7 +3,7 @@ import time
 
 #sound speakers 
 
-seri = serial.Serial(port="/dev/ttyAMA0", baudrate=9600, timeout=1)
+seri = serial.Serial(port="/dev/ttyAMA10", baudrate=9600, timeout=1)
 seri2 = serial.Serial(port="/dev/ttyUSB0", baudrate=9600, timeout=1)
 
 def play_folder_file(folder, file, port):
@@ -36,5 +36,6 @@ def stop(port):
     dfplayer_send(port, 0x16)
 
 
-stop(0)
+play_track(1, 1)
+time.sleep(2)
 stop(1)

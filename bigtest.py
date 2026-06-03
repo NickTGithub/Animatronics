@@ -264,10 +264,6 @@ def speaker_waves_thrd():
             break
         time.sleep(0.0001)
     play_track(1, 1)
-    while True:
-        if timer >= 1000:
-            stop(1)
-        time.sleep(0.01)
 
 def camera_thrd():
     while True:
@@ -360,19 +356,19 @@ waves = threading.Thread(target=waves_thrd)
 
 try:
     timing.start()
-    speaker_talk.start()
+    # speaker_talk.start()
     speaker_waves.start()
-    camera.start()
-    lights.start()
-    pneumatics1.start()
-    pneumatics2.start()
+    # camera.start()
+    # lights.start()
+    # pneumatics1.start()
+    # pneumatics2.start()
     # washington.start()
     # string.start()
     # flag.start()
     # back.start()
     # mid.start()
     # front.start()
-    mic.start()
+    # mic.start()
     waves.start()
     timing.join()
 except KeyboardInterrupt:
