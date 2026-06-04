@@ -44,6 +44,8 @@ pin23.off()
 
 dead = False
 
+SUBTITLE_DELAY = 15
+
 def playVid(file):
     global bg
     if file < 10:
@@ -56,11 +58,10 @@ def playVid(file):
 
     while True:
         isTrue, frame = capture.read()
-        
         if not isTrue:
             print('vid done')
             break
-        cv2.waitKey(26)
+        cv2.waitKey(SUBTITLE_DELAY)
         cv2.imshow("window", frame)
     cv2.waitKey(20)
     cv2.imshow("window", bg)
@@ -359,7 +360,7 @@ try:
     speaker_talk.start()
     speaker_waves.start()
     camera.start()
-    lights.start()
+    # lights.start()
     # pneumatics1.start()
     # pneumatics2.start()
     # washington.start()
