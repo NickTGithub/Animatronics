@@ -195,7 +195,7 @@ def speaker_talk_thrd():
     global yes_counter, talking, no, answered, ynthing, durations, track, bg
     cv2.namedWindow("window", cv2.WINDOW_AUTOSIZE)
     cv2.setWindowProperty("window", cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
-    bg = cv2.imread('background.jpg')
+    bg = np.zeros((480, 1280, 3), dtype=np.uint8)
     cv2.waitKey(20)
     cv2.imshow("window", bg)
     cv2.waitKey(20)
