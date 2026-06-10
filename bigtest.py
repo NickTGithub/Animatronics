@@ -185,33 +185,18 @@ def washington_thrd():
     while True:
         miuzei_micro(3,random.randrange(30,51),random.randrange(7,31)/10)
         miuzei_micro(3,random.randrange(12,141),random.randrange(7,21)/10)
-
-def pneumatics2_thrd():
-    global randTime
-    while True:
-        if pin5.is_active:
-            print('turned on')
-            break
-        time.sleep(0.0001)
-    print('1')
-    time.sleep(1.1)
-    for i in range(0,60):
-        solenoid(27,22,True,1)
-        solenoid(27,22,False,1)
-        time.sleep(randTime)
         
-def pneumatics1_thrd():
-    global randTime
+def pneumatics_thrd():
     while True:
         if pin5.is_active:
             print('turned on')
             break
         time.sleep(0.0001)
     time.sleep(1)
-    print('2')
+    print('pneumatics')
     for i in range(0,60):
-        solenoid(19,26,True,1)
-        solenoid(19,26,False,1)
+        solenoid(19,26,27,22,True,1)
+        solenoid(19,26,27,22False,1)
         randTime = random.randrange(3,8)
         time.sleep(randTime)
 
@@ -378,8 +363,7 @@ def lights_thrd():
 def mic_thrd():
     detect()
 
-pneumatics1 = threading.Thread(target=pneumatics1_thrd)
-pneumatics2 = threading.Thread(target=pneumatics2_thrd)
+pneumatics = threading.Thread(target=pneumatics_thrd)
 string = threading.Thread(target=string_thrd)
 flag = threading.Thread(target=flag_thrd)
 back = threading.Thread(target=back_thrd)
@@ -401,8 +385,7 @@ try:
     speaker_waves.start()
     camera.start()
     lights.start()
-    pneumatics1.start()
-    pneumatics2.start()
+    pneumatics.start()
     # washington.start()
     string.start()
     # flag.start()
