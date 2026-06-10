@@ -104,10 +104,38 @@ def rowing_thrd():
             break
         time.sleep(0.0001)
     rower_devices = [1,2,3,4]
-    rower_angles = [1,2,3,4]
+    rower_angles_max = [1,2,3,4]
+    rower_angles_min = [1,2,3,4]
     while True:
-        miuzei_servo(
+        miuzei_servo(rower_devices, rower_angles_max, 1)
+        miuzei_servo(rower_devices, rower_angles_min, 1)
 
+def heads_thrd():
+    while True:
+        if pin13.is_active:
+            print('turned on')
+            break
+        time.sleep(0.0001)
+    head_devices = [1,2,3,4]
+    head_angles_max = [1,2,3,4]
+    head_angles_min = [1,2,3,4]
+    while True:
+        miuzei_servo(head_devices, head_angles_max, 1)
+        miuzei_servo(head_devices, head_angles_min, 1)
+
+def leg_thrd():
+    while True:
+        if pin13.is_active:
+            print('turned on')
+            break
+        time.sleep(0.0001)
+    leg_devices = [1,2,3,4]
+    leg_angles_max = [1,2,3,4]
+    leg_angles_min = [1,2,3,4]
+    while True:
+        miuzei_servo(leg_devices, leg_angles_max, 1)
+        miuzei_servo(leg_devices, leg_angles_min, 1)
+        
 def flag_thrd():
     while True:
         if pin13.is_active:
