@@ -74,6 +74,8 @@ def waves_thrd():
             print('turned on')
             break
         time.sleep(0.0001)
+    set_volume(100,1)
+    play_track(1, 1)
     pin23.off()
     pin24.value = 1.0
     while dead == False:
@@ -94,34 +96,52 @@ def string_thrd():
             break
         time.sleep(0.0001)
     while True:
-        miuzei_micro(0,180,0.6)
-        miuzei_micro(0,0,0.6)
+        miuzei_micro(0,180)
+        time.sleep(0.6)
+        miuzei_micro(0,0)
+        time.sleep(0.6)
 
-def rowing_thrd():
+def arms_thrd():
     while True:
         if pin13.is_active:
             print('turned on')
             break
         time.sleep(0.0001)
-    rower_devices = [1,2,3,4]
-    rower_angles_max = [1,2,3,4]
-    rower_angles_min = [1,2,3,4]
     while True:
-        miuzei_servo(rower_devices, rower_angles_max, 1)
-        miuzei_servo(rower_devices, rower_angles_min, 1)
-
+        miuzei_servo(2, 120)
+        time.sleep(0.05)
+        miuzei_servo(5, 120)
+        miuzei_servo(12, 120)
+        time.sleep(0.2)
+        miuzei_servo(6, 120)
+        miuzei_micro(8,70)
+        miuzei_servo(2,150)
+        time.sleep(0.05)
+        miuzei_servo(5,150)
+        miuzei_servo(12,150)
+        time.sleep(0.2)
+        miuzei_servo(6,150)
+        miuzei_micro(8,110)
+        
 def heads_thrd():
     while True:
         if pin13.is_active:
             print('turned on')
             break
         time.sleep(0.0001)
-    head_devices = [1,2,3,4]
-    head_angles_max = [1,2,3,4]
-    head_angles_min = [1,2,3,4]
     while True:
-        miuzei_servo(head_devices, head_angles_max, 1)
-        miuzei_servo(head_devices, head_angles_min, 1)
+        miuzei_micro(1, 70)
+        time.sleep(0.05)
+        miuzei_micro(4, 110)
+        miuzei_micro(11, 70)
+        time.sleep(0.2)
+        miuzei_micro(7, 70)
+        miuzei_micro(1,110)
+        time.sleep(0.05)
+        miuzei_micro(4,110)
+        miuzei_micro(11,110)
+        time.sleep(0.2)
+        miuzei_micro(7,110)
 
 def leg_thrd():
     while True:
@@ -129,62 +149,12 @@ def leg_thrd():
             print('turned on')
             break
         time.sleep(0.0001)
-    leg_devices = [1,2,3,4]
-    leg_angles_max = [1,2,3,4]
-    leg_angles_min = [1,2,3,4]
     while True:
-        miuzei_servo(leg_devices, leg_angles_max, 1)
-        miuzei_servo(leg_devices, leg_angles_min, 1)
-        
-def flag_thrd():
-    while True:
-        if pin13.is_active:
-            print('turned on')
-            break
-        time.sleep(0.0001)
-    while True:
-        miuzei_servo(7,random.randrange(0,21),random.randrange(7,21)/10)
-        miuzei_servo(7,random.randrange(20,41),random.randrange(7,21)/10)
-
-def back_thrd():
-    while True:
-        if pin13.is_active:
-            print('turned on')
-            break
-        time.sleep(0.0001)
-    while True:
-        miuzei_servo(4,random.randrange(90,96),random.randrange(3,11)/10)
-        miuzei_servo(4,random.randrange(110,121),random.randrange(3,11)/10)
-
-def mid_thrd(): 
-    while True:
-        if pin13.is_active:
-            print('turned on')
-            break
-        time.sleep(0.0001)
-    while True:
-        miuzei_servo(5,random.randrange(30,41),random.randrange(3,11)/10)
-        miuzei_servo(5,random.randrange(45,56),random.randrange(3,11)/10)
-
-def front_thrd():
-    while True:
-        if pin13.is_active:
-            print('turned on')
-            break
-        time.sleep(0.0001)
-    while True:
-        miuzei_servo(6,random.randrange(65,76),random.randrange(3,11)/10)
-        miuzei_servo(6,random.randrange(81,91),random.randrange(3,11)/10)
-
-def washington_thrd():
-    while True:
-        if pin13.is_active:
-            print('turned on')
-            break
-        time.sleep(0.0001)
-    while True:
-        miuzei_micro(3,random.randrange(30,51),random.randrange(7,31)/10)
-        miuzei_micro(3,random.randrange(12,141),random.randrange(7,21)/10)
+        miuzei_micro(3,70)
+        miuzei_micro(13,70)
+        time.sleep(0.4)    
+        miuzei_micro(3,110)
+        miuzei_micro(13,110)
         
 def pneumatics_thrd():
     while True:
@@ -229,6 +199,9 @@ def speaker_talk_thrd():
             break
         time.sleep(0.0001)
     print('STARTING TALKINIG AEFJE')
+    print('camera')
+    facedet()
+    detect()
     yes_counter=0
     talking = False
     answered = False
@@ -278,26 +251,6 @@ def speaker_talk_thrd():
                 yes_counter = (i*2)+2
                 ynthing = None
         time.sleep(0.001)
-    
-def speaker_waves_thrd():
-    global no, timer
-    time.sleep(3)
-    set_volume(100, 1)
-    while True:
-        if pin13.is_active:
-            print('turned on')
-            break
-        time.sleep(0.0001)
-    play_track(1, 1)
-
-def camera_thrd():
-    while True:
-        if pin13.is_active:
-            print('turned on')
-            break
-        time.sleep(0.0001)
-    print('camera')
-    facedet()
 
 def lights_thrd():
     global dead
@@ -360,40 +313,27 @@ def lights_thrd():
             ticker2 = 0
     leds(0,0,0,0,133,1)
 
-def mic_thrd():
-    detect()
-
 pneumatics = threading.Thread(target=pneumatics_thrd)
 string = threading.Thread(target=string_thrd)
-flag = threading.Thread(target=flag_thrd)
-back = threading.Thread(target=back_thrd)
-mid = threading.Thread(target=mid_thrd)
-front = threading.Thread(target=front_thrd)
 speaker_talk = threading.Thread(target=speaker_talk_thrd)
-speaker_waves = threading.Thread(target=speaker_waves_thrd)
-camera = threading.Thread(target=camera_thrd)
 lights = threading.Thread(target=lights_thrd)
 timing = threading.Thread(target=timing_thrd)
-washington = threading.Thread(target=washington_thrd)
-mic = threading.Thread(target=mic_thrd)
 waves = threading.Thread(target=waves_thrd)
+arms = threading.Thread(target=arms_thrd)
+heads = threading.Thread(target=heads_thrd)
+legs = threading.Thread(target=leg_thrd)
 
 #export DISPLAY=:0
 try:
     timing.start()
     speaker_talk.start()
-    speaker_waves.start()
-    camera.start()
     lights.start()
     pneumatics.start()
-    # washington.start()
     string.start()
-    # flag.start()
-    # back.start()
-    # mid.start()
-    # front.start()
-    mic.start()
     waves.start()
+    arms.start()
+    heads.start()
+    legs.start()
     timing.join()
 except KeyboardInterrupt:
     print('WAIT 2 SEC')
