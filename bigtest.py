@@ -44,7 +44,7 @@ pin23.off()
 
 dead = False
 
-SUBTITLE_DELAY = 15
+SUBTITLE_DELAY = 10
 
 def playVid(file):
     global bg
@@ -355,16 +355,17 @@ washington = threading.Thread(target=washington_thrd)
 mic = threading.Thread(target=mic_thrd)
 waves = threading.Thread(target=waves_thrd)
 
+#export DISPLAY=:0
 try:
     timing.start()
     speaker_talk.start()
     speaker_waves.start()
     camera.start()
-    # lights.start()
-    # pneumatics1.start()
-    # pneumatics2.start()
+    lights.start()
+    pneumatics1.start()
+    pneumatics2.start()
     # washington.start()
-    # string.start()
+    string.start()
     # flag.start()
     # back.start()
     # mid.start()
