@@ -97,6 +97,17 @@ def string_thrd():
         miuzei_micro(0,180,0.6)
         miuzei_micro(0,0,0.6)
 
+def rowing_thrd():
+    while True:
+        if pin13.is_active:
+            print('turned on')
+            break
+        time.sleep(0.0001)
+    rower_devices = [1,2,3,4]
+    rower_angles = [1,2,3,4]
+    while True:
+        miuzei_servo(
+
 def flag_thrd():
     while True:
         if pin13.is_active:
