@@ -315,10 +315,10 @@ legs = threading.Thread(target=leg_thrd)
 #export DISPLAY=:0
 try:
     timing.start()
-    speaker_talk.start()
-    lights.start()
-    pneumatics.start()
-    waves.start()
+    #speaker_talk.start()
+    #lights.start()
+    #pneumatics.start()
+    #waves.start()
     arms.start()
     heads.start()
     legs.start()
@@ -341,8 +341,8 @@ finally:
 
 '''
 SERVO MAPPING
-0 - wind
-1 - back head
+0 - wind 0-180
+1 - back head 50-180
 2 - back arm
 3 - back leg
 4 - mid head
