@@ -79,7 +79,10 @@ def waves_thrd():
     pin23.off()
     pin24.value = 1.0
     while dead == False:
-        time.sleep(0.1)
+        miuzei_micro(0,180)
+        time.sleep(0.6)
+        miuzei_micro(0,0)
+        time.sleep(0.6)
     pin24.off()
 
 def timing_thrd():
@@ -88,18 +91,6 @@ def timing_thrd():
     while True:
         timer += 0.1
         time.sleep(0.1)
-
-def string_thrd():
-    while True:
-        if pin13.is_active:
-            print('turned on')
-            break
-        time.sleep(0.0001)
-    while True:
-        miuzei_micro(0,180)
-        time.sleep(0.6)
-        miuzei_micro(0,0)
-        time.sleep(0.6)
 
 def arms_thrd():
     while True:
@@ -218,7 +209,6 @@ def speaker_talk_thrd():
         ynthing = None
         if talking == False and answered == False:
             ynthing = yn()
-
         if (ynthing == 'yes' or yes_button() == True) and answered == False:
             yes_counter += 1
             answered = True
@@ -314,7 +304,6 @@ def lights_thrd():
     leds(0,0,0,0,133,1)
 
 pneumatics = threading.Thread(target=pneumatics_thrd)
-string = threading.Thread(target=string_thrd)
 speaker_talk = threading.Thread(target=speaker_talk_thrd)
 lights = threading.Thread(target=lights_thrd)
 timing = threading.Thread(target=timing_thrd)
@@ -329,7 +318,6 @@ try:
     speaker_talk.start()
     lights.start()
     pneumatics.start()
-    string.start()
     waves.start()
     arms.start()
     heads.start()
