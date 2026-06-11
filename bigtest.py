@@ -338,3 +338,21 @@ finally:
     pin24.close()
     pin23.close()
     cv2.destroyAllWindows()
+
+'''
+SERVO MAPPING
+0 - wind
+1 - back head
+2 - back arm
+3 - back leg
+4 - mid head
+5 - mid arm
+6 - flag arm
+7 - flag head
+8 - washington arm
+9 - washington neck rot
+10 - washington neck tilt
+11 - front head
+12 - front arm
+13 - front leg
+'''
