@@ -92,6 +92,24 @@ def timing_thrd():
         timer += 0.1
         time.sleep(0.1)
 
+'''
+SERVO MAPPING
+0 - wind 0-180
+1 - back head 50-180
+2 - back arm 90-130
+3 - back leg 80-110
+4 - mid head 0-110
+5 - mid arm 200-230
+6 - flag arm 185-210
+7 - flag head 60-180
+8 - washington arm 120-180
+9 - washington neck rot
+10 - washington neck tilt
+11 - front head 0-110
+12 - front arm 40-70
+13 - front leg 95-145
+'''
+
 def arms_thrd():
     while True:
         if pin13.is_active:
@@ -99,20 +117,20 @@ def arms_thrd():
             break
         time.sleep(0.0001)
     while True:
-        miuzei_servo(2, 120)
+        miuzei_servo(2, 90)
         time.sleep(0.05)
-        miuzei_servo(5, 120)
-        miuzei_servo(12, 120)
+        miuzei_servo(5, 200)
+        miuzei_servo(12, 40)
         time.sleep(0.2)
-        miuzei_servo(6, 120)
-        miuzei_micro(8,70)
-        miuzei_servo(2,150)
+        miuzei_servo(6, 185)
+        miuzei_micro(8,120)
+        miuzei_servo(2,130)
         time.sleep(0.05)
-        miuzei_servo(5,150)
-        miuzei_servo(12,150)
+        miuzei_servo(5,230)
+        miuzei_servo(12,70)
         time.sleep(0.2)
-        miuzei_servo(6,150)
-        miuzei_micro(8,110)
+        miuzei_servo(6,210)
+        miuzei_micro(8,180)
         
 def heads_thrd():
     while True:
@@ -121,18 +139,18 @@ def heads_thrd():
             break
         time.sleep(0.0001)
     while True:
-        miuzei_micro(1, 70)
+        miuzei_micro(1, 50)
         time.sleep(0.05)
-        miuzei_micro(4, 110)
-        miuzei_micro(11, 70)
+        miuzei_micro(4, 0)
+        miuzei_micro(11, 0)
         time.sleep(0.2)
-        miuzei_micro(7, 70)
-        miuzei_micro(1,110)
+        miuzei_micro(7, 60)
+        miuzei_micro(1,50)
         time.sleep(0.05)
-        miuzei_micro(4,110)
-        miuzei_micro(11,110)
+        miuzei_micro(4,0)
+        miuzei_micro(11,0)
         time.sleep(0.2)
-        miuzei_micro(7,110)
+        miuzei_micro(7,60)
 
 def leg_thrd():
     while True:
@@ -141,11 +159,11 @@ def leg_thrd():
             break
         time.sleep(0.0001)
     while True:
-        miuzei_micro(3,70)
-        miuzei_micro(13,70)
+        miuzei_micro(3,80)
+        miuzei_micro(13,95)
         time.sleep(0.4)    
         miuzei_micro(3,110)
-        miuzei_micro(13,110)
+        miuzei_micro(13,145)
         
 def pneumatics_thrd():
     while True:
@@ -157,7 +175,7 @@ def pneumatics_thrd():
     print('pneumatics')
     for i in range(0,60):
         solenoid(19,26,27,22,True,1)
-        solenoid(19,26,27,22False,1)
+        solenoid(19,26,27,22,False,1)
         randTime = random.randrange(3,8)
         time.sleep(randTime)
 
@@ -319,7 +337,7 @@ try:
     #lights.start()
     #pneumatics.start()
     #waves.start()
-    arms.start()
+    #arms.start()
     heads.start()
     legs.start()
     timing.join()
@@ -343,16 +361,16 @@ finally:
 SERVO MAPPING
 0 - wind 0-180
 1 - back head 50-180
-2 - back arm
-3 - back leg
-4 - mid head
-5 - mid arm
-6 - flag arm
-7 - flag head
-8 - washington arm
+2 - back arm 90-130
+3 - back leg 80-110
+4 - mid head 0-110
+5 - mid arm 200-230
+6 - flag arm 185-210
+7 - flag head 60-180
+8 - washington arm 120-180
 9 - washington neck rot
 10 - washington neck tilt
-11 - front head
-12 - front arm
-13 - front leg
+11 - front head 0-110
+12 - front arm 40-70
+13 - front leg 95-145
 '''

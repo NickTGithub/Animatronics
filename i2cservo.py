@@ -18,11 +18,6 @@ def miuzei_micro(device,angle):
     miuzei.servo[device].set_pulse_width_range(500, 2500)
     miuzei.servo[device].angle = angle
 
-miuzei_micro(7,60)
-time.sleep(1)
-miuzei_micro(7,180)
-time.sleep(1)
-
 '''
 SERVO MAPPING
 0 - wind 0-180
@@ -32,11 +27,11 @@ SERVO MAPPING
 4 - mid head 0-110
 5 - mid arm 200-230
 6 - flag arm 185-210
-7 - flag head
-8 - washington arm
+7 - flag head 60-180
+8 - washington arm 120-180
 9 - washington neck rot
 10 - washington neck tilt
-11 - front head
-12 - front arm
-13 - front leg
+11 - front head 0-110
+12 - front arm 40-70
+13 - front leg 95-145
 '''

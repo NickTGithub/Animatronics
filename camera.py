@@ -48,8 +48,8 @@ def facedet():
     neck_rot = threading.Thread(target=x_tilt)
     neck_tilt = threading.Thread(target=y_tilt)
 
-    # neck_rot.start()
-    # neck_tilt.start() UNCOMEENT THESE TOO
+    neck_rot.start()
+    neck_tilt.start() 
     
     cam = Picamera2()
     cam.configure(cam.create_preview_configuration(lores={"size": (640, 480)}, display="lores"))
@@ -125,11 +125,11 @@ def facedet():
                 x_deg = (-1.3*xangle + 75)
                 y_deg = (1.3*yangle + 10)
 
-                # if 180 > x_deg > 0:
-                #     miuzei_micro(1, x_deg, 1)
+                if 180 > x_deg > 0:
+                    miuzei_micro(1, x_deg, 1)
 
-                # if 50 > y_deg > 0:
-                #     miuzei_micro(2, y_deg, 1)
+                if 50 > y_deg > 0:
+                    miuzei_micro(2, y_deg, 1)
                 #MAKE SURE TO UNCOMMENT THIS
         #cv2.waitKey(20)
         #cv2.imshow('image',image)
