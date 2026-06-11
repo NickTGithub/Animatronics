@@ -323,7 +323,7 @@ try:
     timing.start()
     #speaker_talk.start()
     #lights.start()
-    #pneumatics.start()
+    pneumatics.start()
     waves.start()
     arms.start()
     heads.start()
