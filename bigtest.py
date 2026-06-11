@@ -116,21 +116,16 @@ def arms_thrd():
             print('turned on')
             break
         time.sleep(0.0001)
+    devs = [2,5,12,6,8,2,5,12,6,8]
+    min_ranges = [90,200,40,180,120,120,220,60,200,170]
     while True:
-        miuzei_servo(2, 90)
-        time.sleep(0.05)
-        miuzei_servo(5, 200)
-        miuzei_servo(12, 40)
-        time.sleep(0.2)
-        miuzei_servo(6, 185)
-        miuzei_micro(8,120)
-        miuzei_servo(2,130)
-        time.sleep(0.05)
-        miuzei_servo(5,230)
-        miuzei_servo(12,70)
-        time.sleep(0.2)
-        miuzei_servo(6,210)
-        miuzei_micro(8,180)
+        for i in range(0,10):
+            if devs[i] == 8:
+                miuzei_micro(devs[i], random.randrange(min_ranges[i], min_ranges[i]+10))
+            else:
+                miuzei_servo(devs[i], random.randrange(min_ranges[i], min_ranges[i]+10))
+            time.sleep(random.randrange(0,30)/100)
+    
         
 def heads_thrd():
     while True:
@@ -138,19 +133,12 @@ def heads_thrd():
             print('turned on')
             break
         time.sleep(0.0001)
+    devs = [1,4,7,11,1,4,7,11]
+    min_ranges = [50,0,60,0,170,100,170,100]
     while True:
-        miuzei_micro(1, 50)
-        time.sleep(0.05)
-        miuzei_micro(4, 0)
-        miuzei_micro(11, 0)
-        time.sleep(0.2)
-        miuzei_micro(7, 60)
-        miuzei_micro(1,50)
-        time.sleep(0.05)
-        miuzei_micro(4,0)
-        miuzei_micro(11,0)
-        time.sleep(0.2)
-        miuzei_micro(7,60)
+        for i in range(0,8):
+            miuzei_micro(devs[i], random.randrange(min_ranges[i], min_ranges[i]+10))
+            time.sleep(random.randrange(0,100)/100)
 
 def leg_thrd():
     while True:
@@ -158,12 +146,12 @@ def leg_thrd():
             print('turned on')
             break
         time.sleep(0.0001)
+    devs = [3,13,3,13]
+    min_ranges = [80,95,100,135]
     while True:
-        miuzei_micro(3,80)
-        miuzei_micro(13,95)
-        time.sleep(0.4)    
-        miuzei_micro(3,110)
-        miuzei_micro(13,145)
+        for i in range(0,4):
+            miuzei_micro(devs[i], random.randrange(min_ranges[i], min_ranges[i]+10))
+            time.sleep(random.randrange(0,50)/100)
         
 def pneumatics_thrd():
     while True:
@@ -336,8 +324,8 @@ try:
     #speaker_talk.start()
     #lights.start()
     #pneumatics.start()
-    #waves.start()
-    #arms.start()
+    waves.start()
+    arms.start()
     heads.start()
     legs.start()
     timing.join()
