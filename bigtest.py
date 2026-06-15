@@ -182,73 +182,130 @@ def talk():
     unstfugng()
     resetspoken()
 
+_BUTTON_DEBOUNCE_S = 0.35
+_last_yes_press    = 0.0
+_last_no_press     = 0.0
+
+def yes_pressed() -> bool:
+    """Return True once per physical press, ignoring rapid re-presses."""
+    global _last_yes_press
+    if yes_button():
+        now = time.monotonic()
+        if now - _last_yes_press > _BUTTON_DEBOUNCE_S:
+            _last_yes_press = now
+            return True
+    return False
+
+def no_pressed() -> bool:
+    """Return True once per physical press, ignoring rapid re-presses."""
+    global _last_no_press
+    if no_button():
+        now = time.monotonic()
+        if now - _last_no_press > _BUTTON_DEBOUNCE_S:
+            _last_no_press = now
+            return True
+    return False
+
+GREETING_RANGE  = (2,  4)
+REJECTION_RANGE = (26, 31)
+SCRIPT = [
+    (5,  7),  
+    (8,  10),  
+    (11, 13),  
+    (14, 16),  
+    (17, 19),  
+    (20, 22), 
+    (23, 25),  
+]
+
 def speaker_talk_thrd():
-    global yes_counter, talking, no, answered, ynthing, durations, track, bg
+    from speaker import set_volume, play_track, stop
+    from camera  import spawn, unspawn
+    from voice   import yn, resetspoken, stfugng, unstfugng
+    from button  import yes_button, no_button
+
+    global talking, bg
+
     cv2.namedWindow("window", cv2.WINDOW_AUTOSIZE)
     cv2.setWindowProperty("window", cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
     bg = np.zeros((480, 1280, 3), dtype=np.uint8)
-    cv2.waitKey(20)
     cv2.imshow("window", bg)
     cv2.waitKey(20)
-    while True:
-        if pin6.is_active:
-            print('turned on')
-            break
+
+    while not pin6.is_active:
         time.sleep(0.0001)
-    print('STARTING TALKINIG AEFJE')
-    print('camera')
-    yes_counter=0
-    talking = False
-    answered = False
+    print('[talk] pin6 active - starting conversation loop')
+
+    set_volume(100, 0)
+    time.sleep(3)
+
+    s = {
+        'stage':    0,     
+        'greeted':  False,  
+        'answered': False,  
+        'talking':  False,
+    }
+    talking = False  
+
     unstfugng()
     resetspoken()
-    durations = [0,3.5,4.5,4.5,4.5,14.5,14.5,13,8.5,16.5,17.5,21.5,19.5,14.5,25.5,20.5,
-                 16.5,23.5,19.5,15.5,27.5,21.5,19.5,26.5,13.5,13.5,4.5,5.5,3.5,7.5,6.5,3.5]
-    time.sleep(3)
-    set_volume(100,0)
-    new_counter = 0
-    randStart = [5,8,11,14,17,20,23]
-    randEnd = [7,10,13,16,19,22,25]
+
+    def _play(t: int):
+        s['talking']  = True
+        s['answered'] = False
+        talking = True        
+        stfugng()
+        play_track(t, 0)
+        playVid(t)
+        time.sleep(1)
+        cv2.imshow("window", bg)
+        stop(0)
+        s['talking']  = False
+        s['answered'] = False
+        talking = False
+        unstfugng()
+        resetspoken()
+        print(f'[talk] track {t} done, stage={s["stage"]}')
+
+    def _reject():
+        _play(random.randint(*REJECTION_RANGE))
+        s['stage']   = 0
+        s['greeted'] = False
+        time.sleep(5)
+
     while True:
-        ynthing = None
-        if talking == False and answered == False:
-            ynthing = yn()
-        if (ynthing == 'yes' or yes_button() == True) and answered == False:
-            yes_counter += 1
-            answered = True
-            print('yescounter=', yes_counter)
-            print('yn() return',ynthing)
-            resetspoken()
-            stfugng()
-            ynthing = None
-        if ynthing == 'no' or no_button() == True:
-            print('yn() return',ynthing)
-            resetspoken()
-            stfugng()
-            print('nooo')
-            print('ononononononon')
-            track = random.randint(26,31)
-            talk()
-            yes_counter = 0
-            time.sleep(5)
-            new_counter = 0
-        helloo = spawn()
-        if helloo == True:
-            print(helloo)
-        if (helloo == True) and (talking == False) and (new_counter == 0) and (pin6.is_active):
-            print('enter')
+        if spawn() and not s['talking'] and not s['greeted'] and pin6.is_active:
             unspawn()
-            track = random.randint(2,4)
-            talk()
-            yes_counter = 0
-            new_counter = 1
-        for i in range(0,8):
-            if yes_counter == (i*2)+1:
-                track = random.randint(randStart[i],randEnd[i])
-                talk()
-                yes_counter = (i*2)+2
-                ynthing = None
-        time.sleep(0.001)
+            _play(random.randint(*GREETING_RANGE))
+            s['greeted']  = True
+            s['stage']    = 1
+            s['answered'] = False
+
+        if s['greeted'] and not s['talking'] and not s['answered']:
+            voice_result = yn()
+            heard_yes = (voice_result == 'yes') or yes_pressed()
+            heard_no  = (voice_result == 'no')  or no_pressed()
+
+            if heard_no:
+                s['answered'] = True
+                resetspoken()
+                _reject()
+
+            elif heard_yes:
+                s['answered'] = True
+                resetspoken()
+                stage = s['stage']
+                if 1 <= stage <= len(SCRIPT):
+                    lo, hi = SCRIPT[stage - 1]
+                    _play(random.randint(lo, hi))
+                    s['stage'] += 1
+                    if s['stage'] > len(SCRIPT):
+                        s['stage']   = 0
+                        s['greeted'] = False
+                        time.sleep(5)
+
+        time.sleep(0.01)
+
         
 
 def lights_thrd():

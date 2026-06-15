@@ -1,0 +1,67 @@
+def speaker_talk_thrd():
+    global yes_counter, talking, no, answered, ynthing, durations, track, bg
+    cv2.namedWindow("window", cv2.WINDOW_AUTOSIZE)
+    cv2.setWindowProperty("window", cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
+    bg = np.zeros((480, 1280, 3), dtype=np.uint8)
+    cv2.waitKey(20)
+    cv2.imshow("window", bg)
+    cv2.waitKey(20)
+    while True:
+        if pin6.is_active:
+            print('turned on')
+            break
+        time.sleep(0.0001)
+    print('STARTING TALKINIG AEFJE')
+    print('camera')
+    yes_counter=0
+    talking = False
+    answered = False
+    unstfugng()
+    resetspoken()
+    durations = [0,3.5,4.5,4.5,4.5,14.5,14.5,13,8.5,16.5,17.5,21.5,19.5,14.5,25.5,20.5,
+                 16.5,23.5,19.5,15.5,27.5,21.5,19.5,26.5,13.5,13.5,4.5,5.5,3.5,7.5,6.5,3.5]
+    time.sleep(3)
+    set_volume(100,0)
+    new_counter = 0
+    randStart = [5,8,11,14,17,20,23]
+    randEnd = [7,10,13,16,19,22,25]
+    while True:
+        ynthing = None
+        if talking == False and answered == False:
+            ynthing = yn()
+        if (ynthing == 'yes' or yes_button() == True) and answered == False:
+            yes_counter += 1
+            answered = True
+            print('yescounter=', yes_counter)
+            print('yn() return',ynthing)
+            resetspoken()
+            stfugng()
+            ynthing = None
+        if ynthing == 'no' or no_button() == True:
+            print('yn() return',ynthing)
+            resetspoken()
+            stfugng()
+            print('nooo')
+            print('ononononononon')
+            track = random.randint(26,31)
+            talk()
+            yes_counter = 0
+            time.sleep(5)
+            new_counter = 0
+        helloo = spawn()
+        if helloo == True:
+            print(helloo)
+        if (helloo == True) and (talking == False) and (new_counter == 0) and (pin6.is_active):
+            print('enter')
+            unspawn()
+            track = random.randint(2,4)
+            talk()
+            yes_counter = 0
+            new_counter = 1
+        for i in range(0,8):
+            if yes_counter == (i*2)+1:
+                track = random.randint(randStart[i],randEnd[i])
+                talk()
+                yes_counter = (i*2)+2
+                ynthing = None
+        time.sleep(0.001)
