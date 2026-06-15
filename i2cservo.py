@@ -35,3 +35,9 @@ SERVO MAPPING
 12 - front arm 40-70
 13 - front leg 95-145
 '''
+
+miuzei_micro(9,90)
+time.sleep(1)
+
+miuzei_micro(10,15)
+time.sleep(1)

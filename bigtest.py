@@ -83,7 +83,7 @@ def waves_thrd():
         time.sleep(0.6)
         miuzei_micro(0,0)
         time.sleep(0.6)
-    pin24.off()
+    #pin24.off()
 
 def timing_thrd():
     global timer, ynthing
