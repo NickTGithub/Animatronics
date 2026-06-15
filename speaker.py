@@ -35,4 +35,3 @@ def play_track(num, port):
 def stop(port):
     dfplayer_send(port, 0x16)
 
-

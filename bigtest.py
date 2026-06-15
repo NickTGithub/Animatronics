@@ -1,7 +1,7 @@
 from i2cservo import miuzei_servo, miuzei_micro
 from pneumatics import solenoid
 from speaker import set_volume, play_track, stop
-from camera import facedet, spawn
+from camera import facedet, spawn, unspawn
 from ledtest import leds
 from button import yes_button, no_button, init_button
 from voice import detect, yn, resetspoken, stfugng, unstfugng
@@ -77,7 +77,7 @@ def waves_thrd():
     set_volume(100,1)
     play_track(1, 1)
     pin23.off()
-    pin24.value = 1.0
+    #pin24.value = 1.0
     while dead == False:
         miuzei_micro(0,180)
         time.sleep(0.6)
@@ -161,7 +161,7 @@ def pneumatics_thrd():
         time.sleep(0.0001)
     time.sleep(1)
     print('pneumatics')
-    for i in range(0,60):
+    for i in range(0,120):
         solenoid(19,26,27,22,True,1)
         solenoid(19,26,27,22,False,1)
         randTime = random.randrange(3,8)
@@ -197,8 +197,6 @@ def speaker_talk_thrd():
         time.sleep(0.0001)
     print('STARTING TALKINIG AEFJE')
     print('camera')
-    facedet()
-    detect()
     yes_counter=0
     talking = False
     answered = False
@@ -234,8 +232,12 @@ def speaker_talk_thrd():
             yes_counter = 0
             time.sleep(5)
             new_counter = 0
-        if (spawn() == True) and (talking == False) and (new_counter == 0) and (pin6.is_active):
+        helloo = spawn()
+        if helloo == True:
+            print(helloo)
+        if (helloo == True) and (talking == False) and (new_counter == 0) and (pin6.is_active):
             print('enter')
+            unspawn()
             track = random.randint(2,4)
             talk()
             yes_counter = 0
@@ -247,6 +249,7 @@ def speaker_talk_thrd():
                 yes_counter = (i*2)+2
                 ynthing = None
         time.sleep(0.001)
+        
 
 def lights_thrd():
     global dead
@@ -309,6 +312,12 @@ def lights_thrd():
             ticker2 = 0
     leds(0,0,0,0,133,1)
 
+def facedet_thrd():
+    facedet()
+
+def detect_thrd():
+    detect()
+
 pneumatics = threading.Thread(target=pneumatics_thrd)
 speaker_talk = threading.Thread(target=speaker_talk_thrd)
 lights = threading.Thread(target=lights_thrd)
@@ -317,24 +326,26 @@ waves = threading.Thread(target=waves_thrd)
 arms = threading.Thread(target=arms_thrd)
 heads = threading.Thread(target=heads_thrd)
 legs = threading.Thread(target=leg_thrd)
+facedeter = threading.Thread(target=facedet_thrd)
+detecter = threading.Thread(target=detect_thrd)
 
 #export DISPLAY=:0
 try:
     timing.start()
-    #speaker_talk.start()
-    #lights.start()
+    speaker_talk.start()
+    lights.start()
     pneumatics.start()
     waves.start()
     arms.start()
     heads.start()
     legs.start()
+    facedeter.start()
+    detecter.start()
     timing.join()
 except KeyboardInterrupt:
     print('WAIT 2 SEC')
     leds(0,0,0,1,117,1)
     dead = True
-    pin24.off()
-    pin23.off()
 finally:
     stop(1)
     stop(0)

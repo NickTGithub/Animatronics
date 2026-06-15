@@ -31,7 +31,8 @@ def facedet():
         global x_deg, kill
         while True:
             if 180 > x_deg > 0:
-                miuzei_micro(1, x_deg, 1)
+                miuzei_micro(9, x_deg)
+                time.sleep(0.1)
             if kill == 1:
                 break
             time.sleep(1)
@@ -40,7 +41,8 @@ def facedet():
         global y_deg, kill
         while True:
             if 30 > y_deg > 0:
-                miuzei_micro(2, y_deg, 1)
+                miuzei_micro(10, y_deg)
+                time.sleep(0.1)
             if kill == 1:
                 break
             time.sleep(1)
@@ -69,9 +71,9 @@ def facedet():
     PTORSCALE = SIZER/SIZEP
     PROJX = 0.25 #inches
     PROJY = 0.75 #inches
-    XOFF = -1.5 #inches
-    YOFF = -7 #inches
-    ZOFF = 0 #inches
+    XOFF = -0.25 #inches
+    YOFF = -9 #inches
+    ZOFF = 6 #inches
 
     while True:
         image = cam.capture_array() 
@@ -126,14 +128,16 @@ def facedet():
                 y_deg = (1.3*yangle + 10)
 
                 if 180 > x_deg > 0:
-                    miuzei_micro(1, x_deg, 1)
-
+                    miuzei_micro(1, x_deg)
+                    
                 if 50 > y_deg > 0:
-                    miuzei_micro(2, y_deg, 1)
+                    miuzei_micro(2, y_deg)
                 #MAKE SURE TO UNCOMMENT THIS
         #cv2.waitKey(20)
         #cv2.imshow('image',image)
-
+        boo = spawn()
+        if boo == True:
+            print('heheheh')
         # key = cv2.waitKey(1) & 0xFF
         # if key == ord('q') or keyboard.is_pressed('q'):
         # if keyboard.is_pressed('q'):
@@ -155,9 +159,13 @@ def facedet():
 
 def spawn():
     global newPeople
+    #print(newPeople)
     if newPeople == True:
-        newPeople = False  
         return True
     return False
+
+def unspawn():
+    global newPeople
+    newPeople = False
 
 # facedet()
