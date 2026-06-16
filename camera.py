@@ -133,8 +133,9 @@ def facedet():
                 if 30 > y_deg > 0:
                     miuzei_micro(2, y_deg)
                 #MAKE SURE TO UNCOMMENT THIS
-        #cv2.waitKey(20)
-        #cv2.imshow('image',image)
+        if cv == True:
+            cv2.waitKey(20)
+            cv2.imshow('image',image)
         boo = spawn()
         if boo == True:
             print('heheheh')
@@ -169,3 +170,4 @@ def unspawn():
     newPeople = False
 
 # facedet()
+cv = False

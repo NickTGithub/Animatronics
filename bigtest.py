@@ -44,7 +44,7 @@ pin23.off()
 
 dead = False
 
-SUBTITLE_DELAY = 10
+SUBTITLE_DELAY = 5
 
 def playVid(file):
     global bg
@@ -171,11 +171,13 @@ def talk():
     global track, talking, answered, durations, bg
     print(track)
     play_track(track,0)
-    playVid(track)
+    if cv == True:
+        playVid(track)
     talking = True
     stfugng()
     time.sleep(1)
-    cv2.imshow("window", bg)
+    if cv == True:
+        cv2.imshow("window", bg)
     stop(0)
     talking = False
     answered = False
@@ -225,12 +227,12 @@ def speaker_talk_thrd():
     from button  import yes_button, no_button
 
     global talking, bg
-
-    cv2.namedWindow("window", cv2.WINDOW_AUTOSIZE)
-    cv2.setWindowProperty("window", cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
-    bg = np.zeros((480, 1280, 3), dtype=np.uint8)
-    cv2.imshow("window", bg)
-    cv2.waitKey(20)
+    if cv == True:
+        cv2.namedWindow("window", cv2.WINDOW_AUTOSIZE)
+        cv2.setWindowProperty("window", cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
+        bg = np.zeros((480, 1280, 3), dtype=np.uint8)
+        cv2.imshow("window", bg)
+        cv2.waitKey(20)
 
     while not pin6.is_active:
         time.sleep(0.0001)
@@ -256,9 +258,11 @@ def speaker_talk_thrd():
         talking = True        
         stfugng()
         play_track(t, 0)
-        playVid(t)
+        if cv == True:
+            playVid(t)
         time.sleep(1)
-        cv2.imshow("window", bg)
+        if cv == True:
+            cv2.imshow("window", bg)
         stop(0)
         s['talking']  = False
         s['answered'] = False
@@ -387,6 +391,7 @@ facedeter = threading.Thread(target=facedet_thrd)
 detecter = threading.Thread(target=detect_thrd)
 
 #export DISPLAY=:0
+cv = True
 try:
     timing.start()
     speaker_talk.start()
