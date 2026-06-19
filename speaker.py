@@ -1,23 +1,15 @@
 import serial
 import time
 
-#sound speakers 
-
-seri = serial.Serial(port="/dev/ttyAMA10", baudrate=9600, timeout=1)
+seri  = serial.Serial(port="/dev/ttyAMA0", baudrate=9600, timeout=1)
 seri2 = serial.Serial(port="/dev/ttyUSB0", baudrate=9600, timeout=1)
 
-def play_folder_file(folder, file, port):
-    dfplayer_send(port, 0x0F, folder, file)
-
 def dfplayer_send(port, cmd, param1=0, param2=0):
-
     cmd_line = [0x7E, 0xFF, 0x06, cmd, 0x00, param1, param2]
-    checksum = 0 - sum(cmd_line[1:]) 
+    checksum = 0 - sum(cmd_line[1:])
     checksum &= 0xFFFF
-
     high = (checksum >> 8) & 0xFF
-    low = checksum & 0xFF
-
+    low  = checksum & 0xFF
     packet = bytes(cmd_line + [high, low, 0xEF])
     if port == 1:
         seri.write(packet)
@@ -30,8 +22,10 @@ def set_volume(level, port):
 
 def play_track(num, port):
     dfplayer_send(port, 0x03, (num >> 8) & 0xFF, num & 0xFF)
-    print('file', num)
+    print(f'[speaker] playing track {num} on port {port}')
 
 def stop(port):
     dfplayer_send(port, 0x16)
 
+def play_folder_file(folder, file, port):
+    dfplayer_send(port, 0x0F, folder, file)

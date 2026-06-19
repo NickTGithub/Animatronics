@@ -6,108 +6,113 @@ from picamera2 import Picamera2, Preview
 from i2cservo import miuzei_servo, miuzei_micro
 import threading
 import math
-import keyboard
 
+SHOW_CV = False
 
-
-#integrated face detection algorithim and movements
 def facedet():
-    global kill, rot_deg, tilt_deg, oldFace, newFace, newPeople, x_deg, y_deg 
+    global kill, newPeople, x_deg, y_deg
+
     newPeople = False
     kill = 0
-    oldFace = None
-    oldFace2 = None
-    oldFace3 = None
-    oldFace4 = None
-    oldFace5 = None
-    oldFace6 = None
-    oldFace7 = None
+
+    # Rolling face history (7 frames)
+    face_history = [None] * 7
     newFace = None
 
     x_deg = 90
-    y_deg = 10
+    y_deg = 15
 
     def x_tilt():
         global x_deg, kill
         while True:
-            if 180 > x_deg > 0:
+            if 0 < x_deg < 180:
+                print('servo ROT to', x_deg)
                 miuzei_micro(9, x_deg)
-                time.sleep(0.1)
+                time.sleep(1)
             if kill == 1:
                 break
-            time.sleep(1)
 
     def y_tilt():
         global y_deg, kill
         while True:
-            if 30 > y_deg > 0:
+            if 0 < y_deg < 30:
+                print('servo TILT to', y_deg)
                 miuzei_micro(10, y_deg)
-                time.sleep(0.1)
+                time.sleep(1)
             if kill == 1:
                 break
-            time.sleep(1)
 
+    # Uncomment to enable background servo threads
     neck_rot = threading.Thread(target=x_tilt)
     neck_tilt = threading.Thread(target=y_tilt)
+    neck_rot.start()
+    neck_tilt.start()
 
-    # neck_rot.start()
-    # neck_tilt.start() 
-    
+    # Camera setup
     cam = Picamera2()
-    cam.configure(cam.create_preview_configuration(lores={"size": (640, 480)}, display="lores"))
+    cam.configure(cam.create_preview_configuration(
+        lores={"size": (640, 480)}, display="lores"
+    ))
     cam.start()
+    time.sleep(0.5)  # Let camera warm up
 
+    # Face detector setup
     model = "face_detection_yunet_2023mar.onnx"
-    detector = cv2.FaceDetectorYN.create(model,"",(640, 480),score_threshold=0.73,nms_threshold=0.3,top_k=5000)
+    detector = cv2.FaceDetectorYN.create(
+        model, "", (640, 480),
+        score_threshold=0.73,
+        nms_threshold=0.3,
+        top_k=5000
+    )
 
-    image = cam.capture_array()
-    image = image[:, :, :3] 
-    image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
-
-    #---CONSTANTS---
-    SIZEP = 220 #pixels
-    SIZER = 7 #inches
-    LENR = 18 #inches
-    PTORSCALE = SIZER/SIZEP
-    PROJX = 0.25 #inches
-    PROJY = 0.75 #inches
-    XOFF = -0.25 #inches
-    YOFF = -9 #inches
-    ZOFF = 6 #inches
+    # --- CONSTANTS ---
+    SIZEP = 220   # pixels (reference face size)
+    SIZER = 7     # inches (real face size)
+    LENR = 18     # inches (reference depth)
+    PTORSCALE = SIZER / SIZEP
+    PROJX = 0.25  # inches
+    PROJY = 0.75  # inches
+    XOFF = -0.25  # inches
+    YOFF = -9     # inches
+    ZOFF = 0      # inches
 
     while True:
-        image = cam.capture_array() 
+        image = cam.capture_array()
         image = image[:, :, :3]
         image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
-        image = cv2.rotate(image, cv2.ROTATE_90_CLOCKWISE)
-        image = cv2.rotate(image, cv2.ROTATE_90_CLOCKWISE)
+        image = cv2.rotate(image, cv2.ROTATE_180)  # Replaced two 90-CW rotations
+
         faces = detector.detect(image)
-        if faces[1] is not None: 
-            oldFace7 = oldFace6
-            oldFace6 = oldFace5
-            oldFace5 = oldFace4
-            oldFace4 = oldFace3
-            oldFace3 = oldFace2
-            oldFace2 = oldFace
-            oldFace = newFace
+
+        # Debug values — updated per frame if a face is found
+        size = depth = centerX = centerY = None
+        realx = realy = newrealx = newrealy = None
+        xz = yz = xangle = yangle = None
+
+        if faces[1] is not None:
+            # Shift face history
+            face_history = [faces[1]] + face_history[:-1]
             newFace = faces[1]
-            # print(oldFace7, oldFace6, oldFace5, oldFace4, oldFace3, oldFace2, oldFace, newFace)
-            if ((oldFace is None) and (oldFace2 is None) and (oldFace3 is None) and (oldFace4 is None) and 
-                (oldFace5 is None) and (oldFace6 is None) and (oldFace7 is None) and (newFace is not None)):
+
+            # Detect new people: previously no faces detected across all history
+            if all(h is None for h in face_history[1:]) and newFace is not None:
                 newPeople = True
+
             for face in faces[1]:
                 x, y, w, h = map(int, face[:4])
-                centerX = (x+x+w)/2
-                centerY = (y+y+h)/2
+                centerX = (x + x + w) / 2
+                centerY = (y + y + h) / 2
 
-                cv2.rectangle(image, (x,y), (x+w, y+h), color = (255,0,255), thickness=1)
-                cv2.circle(image, (int(centerX), int(centerY)), 10, color = (255,0,255), thickness = 1)
+                cv2.rectangle(image, (x, y), (x + w, y + h),
+                              color=(255, 0, 255), thickness=1)
+                cv2.circle(image, (int(centerX), int(centerY)),
+                           10, color=(255, 0, 255), thickness=1)
 
                 centerY -= 240
                 centerX -= 320
                 size = h
-                scale = SIZEP/size
-                depth = (scale*LENR) + ZOFF 
+                scale = SIZEP / size
+                depth = (scale * LENR) + ZOFF
 
                 realx = PTORSCALE * centerX
                 realy = PTORSCALE * centerY
@@ -118,56 +123,49 @@ def facedet():
                 xz = PROJX + depth
                 yz = PROJY + depth
 
-                xangle = math.atan(newrealx/xz)
-                yangle = math.atan(newrealy/yz)
+                xangle = math.degrees(math.atan(newrealx / xz)) 
+                yangle = math.degrees(math.atan(newrealy / yz))
 
-                xangle = xangle * (180/math.pi)
-                yangle = yangle * (180/math.pi)
+                x_deg = (-1 * xangle) * 1.3 + 90
+                y_deg = (yangle) * 1.3 + 15
 
-                x_deg = (-1.3*xangle + 90)
-                y_deg = (1.3*yangle + 15)
+                # if 0 < x_deg < 180:
+                #     miuzei_micro(1, x_deg)
 
-                if 180 > x_deg > 0:
-                    miuzei_micro(1, x_deg)
-                    
-                if 30 > y_deg > 0:
-                    miuzei_micro(2, y_deg)
-                #MAKE SURE TO UNCOMMENT THIS
-        if cv == True:
-            cv2.waitKey(20)
-            cv2.imshow('image',image)
-        boo = spawn()
-        if boo == True:
-            print('heheheh')
-        # key = cv2.waitKey(1) & 0xFF
-        # if key == ord('q') or keyboard.is_pressed('q'):
-        # if keyboard.is_pressed('q'):
-        #     kill = 1
-        #     break
-        # #if key == ord('b') or keyboard.is_pressed('b'):
-        # if keyboard.is_pressed('b'):
+                # if 0 < y_deg < 30:
+                #     miuzei_micro(2, y_deg)
+        else:
+            # Shift history with None when no face detected
+            face_history = [None] + face_history[:-1]
+
+        # Check for new person event
+        if spawn():
+            print("New person detected!")
+            unspawn()
+
+        if SHOW_CV:
+            cv2.imshow("Face Detection", image)
+
+        # FIX: use ord('b') and increase waitKey so keypresses register
+        # key = cv2.waitKey(100) & 0xFF
+        # if key == ord('b'):
         #     print('--------------------------')
         #     print('size', size,'depth', depth, 'centerX', centerX, 'realx', realx, 'realy', realy)
         #     print('xz', xz, 'yz', yz, 'newrealx', newrealx, 'newrealy', newrealy)
         #     print('xangle', xangle, 'yangle', yangle)
         #     print('x_deg', x_deg, 'y_deg', y_deg)
         #     print('--------------------------')
-        time.sleep(0.01)
+        # elif key == ord('q'):
+        #     print("Quitting...")
+        #     # break
 
-    #cv2.destroyAllWindows()
-
-    #cv2.waitKey(0)
+    
 
 def spawn():
     global newPeople
-    #print(newPeople)
-    if newPeople == True:
-        return True
-    return False
+    return newPeople is True
+
 
 def unspawn():
     global newPeople
     newPeople = False
-
-# facedet()
-cv = False
