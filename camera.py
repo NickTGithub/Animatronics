@@ -60,7 +60,7 @@ def facedet():
     model = "face_detection_yunet_2023mar.onnx"
     detector = cv2.FaceDetectorYN.create(
         model, "", (640, 480),
-        score_threshold=0.73,
+        score_threshold=0.3,
         nms_threshold=0.3,
         top_k=5000
     )
