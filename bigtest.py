@@ -404,3 +404,4 @@ finally:
     pin24.close()
     pin23.close()
     cv2.destroyAllWindows()
+#export DISPLAY=:0
