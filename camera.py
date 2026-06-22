@@ -35,7 +35,7 @@ def facedet():
     def y_tilt():
         global y_deg, kill
         while True:
-            if 0 < y_deg < 30:
+            if 0 < y_deg < 40:
                 print('servo TILT to', y_deg)
                 miuzei_micro(10, y_deg)
                 time.sleep(1)
@@ -126,8 +126,8 @@ def facedet():
                 xangle = math.degrees(math.atan(newrealx / xz)) 
                 yangle = math.degrees(math.atan(newrealy / yz))
 
-                x_deg = (-1 * xangle) * 1.3 + 90
-                y_deg = (yangle) * 1.3 + 15
+                x_deg = (-1 * xangle) * 1.3 + 60
+                y_deg = (yangle) * 1.3 + 20
 
                 # if 0 < x_deg < 180:
                 #     miuzei_micro(1, x_deg)
@@ -144,6 +144,7 @@ def facedet():
             unspawn()
 
         if SHOW_CV:
+            cv2.waitKey(20)
             cv2.imshow("Face Detection", image)
 
         # FIX: use ord('b') and increase waitKey so keypresses register

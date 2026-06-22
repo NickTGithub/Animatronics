@@ -24,14 +24,16 @@ SERVO MAPPING
 1 - back head 50-180
 2 - back arm 90-130
 3 - back leg 80-110
-4 - mid head 0-110
+4 - mid head 100-180
 5 - mid arm 200-230
-6 - flag arm 185-210
+6 - flag arm 180-240
 7 - flag head 60-180
 8 - washington arm 120-180
 9 - washington neck rot
 10 - washington neck tilt
 11 - front head 0-110
-12 - front arm 40-70
+12 - front arm 50-100
 13 - front leg 95-145
 '''
+# miuzei_micro(9,60)
+# time.sleep(1)

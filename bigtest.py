@@ -110,11 +110,13 @@ def waves_thrd():
     set_volume(100, 1)
     play_track(1, 1)
     pin23.off()
+    pin24.value = 1
     while not dead:
         miuzei_micro(0, 180)
         time.sleep(0.6)
         miuzei_micro(0, 0)
         time.sleep(0.6)
+    pin24.off()
 
 def timing_thrd():
     global timer
@@ -145,24 +147,24 @@ def arms_thrd():
     while not pin13.is_active:
         time.sleep(0.0001)
     devs       = [2, 5, 12, 6,  8,  2,  5,  12,  6,   8]
-    min_ranges = [90,200, 40,180,120,120,220,  60, 200,170]
+    min_ranges = [90,200, 50,180,120,120,220,  90, 230,170]
     while True:
         for i in range(10):
             if devs[i] == 8:
                 miuzei_micro(devs[i], random.randrange(min_ranges[i], min_ranges[i]+10))
             else:
                 miuzei_servo(devs[i], random.randrange(min_ranges[i], min_ranges[i]+10))
-            time.sleep(random.randrange(0, 30) / 100)
+            time.sleep(random.randrange(0, 10) / 100)
 
 def heads_thrd():
     while not pin13.is_active:
         time.sleep(0.0001)
     devs       = [1,  4,  7,  11,  1,  4,   7, 11]
-    min_ranges = [50,  0, 60,   0,170,100, 170,100]
+    min_ranges = [50,  90, 60,   0,170,170, 170,100]
     while True:
         for i in range(8):
             miuzei_micro(devs[i], random.randrange(min_ranges[i], min_ranges[i]+10))
-            time.sleep(random.randrange(0, 100) / 100)
+            time.sleep(random.randrange(0, 30) / 100)
 
 def leg_thrd():
     while not pin13.is_active:
