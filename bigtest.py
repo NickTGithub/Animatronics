@@ -110,13 +110,15 @@ def waves_thrd():
     set_volume(100, 1)
     play_track(1, 1)
     pin23.off()
-    pin24.value = 1
+    #pin24.value = 1
     while not dead:
         miuzei_micro(0, 180)
         time.sleep(0.6)
         miuzei_micro(0, 0)
         time.sleep(0.6)
-    pin24.off()
+    #pin24.off()
+
+#WAAOIGIURHIUGBWIUFIUHG   WAVES HEREEE
 
 def timing_thrd():
     global timer
