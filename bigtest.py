@@ -23,7 +23,7 @@ import sounddevice as sd
 from vosk import Model, KaldiRecognizer, SetLogLevel
 import json
 
-# ── hardware init ────────────────────────────────────────────────────────────
+
 init_button()
 talking = False
 
@@ -38,26 +38,10 @@ pin24.off()
 pin23.off()
 
 dead = False
-cv   = True   # set False to skip video display
-
-# ── video + audio sync ───────────────────────────────────────────────────────
-
+cv   = True  
 def playVid(track_num, audio_port=0):
-    """
-    Play the subtitle video for `track_num` and the matching DFPlayer track
-    at the same moment so they stay in sync.
-
-    Strategy
-    --------
-    1. Open the video file and read its FPS.
-    2. Send the play_track() command to DFPlayer (fires instantly over serial).
-    3. Immediately start displaying frames, sleeping only the remainder of each
-       frame's budget so we don't drift behind the audio.
-    4. When the video ends, stop() the audio.
-    """
     global bg
 
-    # build file path
     tag  = f'{track_num:02d}'
     path = f'subtitles/{tag}.mp4'
     print(f'[video] opening {path}')
@@ -71,10 +55,8 @@ def playVid(track_num, audio_port=0):
     frame_budget  = 1.0 / fps          # seconds per frame
     frame_count   = 0
 
-    # ── fire audio and video simultaneously ──────────────────────────────────
     t0 = time.perf_counter()
-    play_track(track_num, audio_port)  # serial write ≈ 0.05 s — negligible
-
+    play_track(track_num, audio_port) 
     while True:
         deadline = t0 + frame_count * frame_budget
 
@@ -86,22 +68,26 @@ def playVid(track_num, audio_port=0):
         cv2.waitKey(1)
         frame_count += 1
 
-        # sleep only what's left of this frame's time budget
+        
         remaining = deadline - time.perf_counter()
         if remaining > 0:
             time.sleep(remaining)
 
     cap.release()
 
-    # return display to black background
+
     cv2.imshow('window', bg)
     cv2.waitKey(20)
 
-    # stop audio (video is authoritative for duration)
+   
     stop(audio_port)
     print(f'[video] track {track_num} finished ({frame_count} frames @ {fps:.1f} fps)')
 
-# ── threads ──────────────────────────────────────────────────────────────────
+'''
+
+WAVES THREAD HEREEEEE -------------------------------------------------------------------------------
+
+'''
 
 def waves_thrd():
     global talking, dead
@@ -110,15 +96,12 @@ def waves_thrd():
     set_volume(100, 1)
     play_track(1, 1)
     pin23.off()
-    #pin24.value = 1
-    while not dead:
-        miuzei_micro(0, 180)
-        time.sleep(0.6)
-        miuzei_micro(0, 0)
-        time.sleep(0.6)
-    #pin24.off()
-
-#WAAOIGIURHIUGBWIUFIUHG   WAVES HEREEE
+    while True:
+        if pin5.is_active == True:
+            pin24.value = 1
+        else:
+            pin24.value = 0
+    pin24.off()
 
 def timing_thrd():
     global timer
@@ -127,44 +110,28 @@ def timing_thrd():
         timer += 0.1
         time.sleep(0.1)
 
-'''
-SERVO MAPPING
-0  - wind        0-180
-1  - back head   50-180
-2  - back arm    90-130
-3  - back leg    80-110
-4  - mid head    0-110
-5  - mid arm     200-230
-6  - flag arm    185-210
-7  - flag head   60-180
-8  - washington arm  120-180
-9  - washington neck rot
-10 - washington neck tilt
-11 - front head  0-110
-12 - front arm   40-70
-13 - front leg   95-145
-'''
-
 def arms_thrd():
     while not pin13.is_active:
         time.sleep(0.0001)
-    devs       = [2, 5, 12, 6,  8,  2,  5,  12,  6,   8]
-    min_ranges = [90,200, 50,180,120,120,220,  90, 230,170]
+    devs       = [2,  5,  12,6,  2, 5,  12,6 ]
+    min_ranges = [120,230,50,180,95,190,95,235]
     while True:
-        for i in range(10):
-            if devs[i] == 8:
-                miuzei_micro(devs[i], random.randrange(min_ranges[i], min_ranges[i]+10))
-            else:
-                miuzei_servo(devs[i], random.randrange(min_ranges[i], min_ranges[i]+10))
-            time.sleep(random.randrange(0, 10) / 100)
+        for i in range(4):
+            miuzei_servo(devs[i], random.randrange(min_ranges[i], min_ranges[i]+5))
+        #print('down done')
+        time.sleep(random.randrange(30, 60) / 100)
+        for i in range(4,8):
+            miuzei_servo(devs[i], random.randrange(min_ranges[i], min_ranges[i]+5))
+        #print('up done')
+        time.sleep(random.randrange(30, 60) / 100)
 
 def heads_thrd():
     while not pin13.is_active:
         time.sleep(0.0001)
-    devs       = [1,  4,  7,  11,  1,  4,   7, 11]
-    min_ranges = [50,  90, 60,   0,170,170, 170,100]
+    devs       = [1,  4,  7,  11,  8, 0, 1,  4,   7, 11, 8, 0]
+    min_ranges = [50,  90, 0,   0, 120, 0,170,170, 150,100, 170, 170]
     while True:
-        for i in range(8):
+        for i in range(12):
             miuzei_micro(devs[i], random.randrange(min_ranges[i], min_ranges[i]+10))
             time.sleep(random.randrange(0, 30) / 100)
 
@@ -179,9 +146,6 @@ def leg_thrd():
             time.sleep(random.randrange(0, 50) / 100)
 
 def pneumatics_thrd():
-    while not pin5.is_active:
-        time.sleep(0.0001)
-    time.sleep(1)
     print('[pneumatics] starting')
     for _ in range(120):
         solenoid(19, 26, 27, 22, True,  1)
@@ -248,7 +212,7 @@ def speaker_talk_thrd():
     unstfugng()
     resetspoken()
 
-    def _play(t: int):
+    def _play(t):
         global talking
         s['talking']  = True
         s['answered'] = False
@@ -287,7 +251,7 @@ def speaker_talk_thrd():
         time.sleep(duration)
 
     def _reject():
-        _play(random.randint(*REJECTION_RANGE))
+        _play(31) #HEERREEEEEEE for goodbyes
         s['stage']   = 0
         s['greeted'] = False
         time.sleep(5)
@@ -295,7 +259,7 @@ def speaker_talk_thrd():
     while True:
         if spawn() and not s['talking'] and not s['greeted'] and pin6.is_active:
             unspawn()
-            _play(random.randint(*GREETING_RANGE))
+            _play(1)#HEREEEEEEEEE for intro
             s['greeted']  = True
             s['stage']    = 1
             s['answered'] = False
@@ -329,14 +293,20 @@ def speaker_talk_thrd():
 
 def lights_thrd():
     global dead
+    LIGHTR = 10
+    LIGHTG = 20
+    LIGHTB = 35
+    DARKR = 1
+    DARKG = 10
+    DARKB = 20
     while not pin13.is_active:
         time.sleep(0.0001)
     ticker  = 0
     ticker2 = 34
-    leds(5, 3, 1, 68, 133, 1)
+    leds(5, 3, 1, 67, 132, 1)
     leds(255, 205, 105, 83,  84,  1)
     leds(255, 205, 105, 105, 106, 1)
-    leds(0,  20,  40,  0,   67,  1)
+    leds(0,  20,  40,  0,   66,  1)
     excludes = [79,80,81,82,83,84,101,102,103,104,105,106]
     while not dead:
         if random.randrange(0, 25) == 0:
@@ -349,34 +319,31 @@ def lights_thrd():
             leds(5,   3,   1,   randspot, randspot+3, 1)
 
         if ticker != 0:
-            leds(0, 10, 20, ticker-1, ticker,   1)
+            leds(DARKR, DARKG, DARKB, ticker-1, ticker,   1)
         else:
-            leds(0, 10, 20, 0,        ticker,   1)
-        start = min(ticker + 1, 67)
-        end   = min(ticker + 6, 67)
-        leds(30, 40, 60, start, end, 1)
-        ticker = (ticker + 1) % 68
+            leds(DARKR, DARKG, DARKB, 0,        ticker,   1)
+        start = min(ticker + 1, 66)
+        end   = min(ticker + 6, 66)
+        leds(LIGHTR, LIGHTG, LIGHTB, start, end, 1)
+        ticker = (ticker + 1) % 67
 
         if ticker2 != 0:
-            leds(0, 10, 20, ticker2-1, ticker2, 1)
+            leds(DARKR, DARKG, DARKB, ticker2-1, ticker2, 1)
         else:
-            leds(0, 10, 20, 0,         ticker2, 1)
-        start2 = min(ticker2 + 1, 67)
-        end2   = min(ticker2 + 6, 67)
-        leds(30, 40, 60, start2, end2, 1)
-        ticker2 = (ticker2 + 1) % 68
+            leds(DARKR, DARKG, DARKB, 0,         ticker2, 1)
+        start2 = min(ticker2 + 1, 66)
+        end2   = min(ticker2 + 6, 66)
+        leds(LIGHTR, LIGHTG, LIGHTB, start2, end2, 1)
+        ticker2 = (ticker2 + 1) % 67
 
-    leds(0, 0, 0, 0, 133, 1)
+    leds(0, 0, 0, 0, 132, 1)
 
-# ── camera / voice threads ───────────────────────────────────────────────────
 
 def facedet_thrd():
     facedet()
 
 def detect_thrd():
     detect()
-
-# ── main ─────────────────────────────────────────────────────────────────────
 
 pneumatics_t  = threading.Thread(target=pneumatics_thrd,   daemon=True)
 speaker_talk  = threading.Thread(target=speaker_talk_thrd, daemon=True)

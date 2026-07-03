@@ -31,7 +31,7 @@ YES_T1 = {'yes', 'yeah', 'yep', 'yup', 'sure', 'okay', 'ok',
 YES_T2 = {'maybe', 'fine', 'alright', 'yesh', 'mhm'}
 
 NO_T1  = {'no', 'nope', 'nah', 'never', 'negative', 'stop',
-           'quit', 'dont', "don't", 'refuse', 'decline', 'nay'}
+           'quit', 'dont', "don't", 'refuse', 'decline', 'nay', 'oh', 'know', 'not'}
 NO_T2  = {'not'}
 
 def _classify(text: str):

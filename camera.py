@@ -26,7 +26,7 @@ def facedet():
         global x_deg, kill
         while True:
             if 0 < x_deg < 180:
-                print('servo ROT to', x_deg)
+                #print('servo ROT to', x_deg)
                 miuzei_micro(9, x_deg)
                 time.sleep(1)
             if kill == 1:
@@ -36,7 +36,7 @@ def facedet():
         global y_deg, kill
         while True:
             if 0 < y_deg < 40:
-                print('servo TILT to', y_deg)
+                #print('servo TILT to', y_deg)
                 miuzei_micro(10, y_deg)
                 time.sleep(1)
             if kill == 1:
@@ -75,6 +75,8 @@ def facedet():
     XOFF = -0.25  # inches
     YOFF = -9     # inches
     ZOFF = 0      # inches
+    
+    new_found = False
 
     while True:
         image = cam.capture_array()
@@ -139,9 +141,10 @@ def facedet():
             face_history = [None] + face_history[:-1]
 
         # Check for new person event
-        if spawn():
+        if spawn() and new_found == False:
             print("New person detected!")
             unspawn()
+            new_found = True
 
         if SHOW_CV:
             cv2.waitKey(20)
